@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a1020">
+<!-- GitHub Pages: 이 파일을 /docs/jeongsaeyeong.html 또는 루트에 두면 됩니다 -->
+<!-- 삼수선 모듈 병합 시: index.html에서 iframe 또는 JS import로 분리 로드 권장 -->
+<title>정사영 탐구 — 화성 Arcturus</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{width:100%;height:100%;height:-webkit-fill-available}
+body{width:100%;height:100%;height:-webkit-fill-available;overflow:hidden;
+  font-family:'Noto Sans KR','Malgun Gothic',sans-serif;background:#0a1020;
+  -webkit-overflow-scrolling:touch;position:fixed;top:0;left:0;right:0;bottom:0}
+#app{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;
+  width:100%;height:100%;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right)}
+#hd{flex-shrink:0;height:50px;background:#0f1b35;border-bottom:2px solid #2a4070;
+    display:flex;align-items:center;padding:0 10px;gap:6px;overflow:hidden}
+.ti{color:#99bbff;font-weight:bold;font-size:13px;white-space:nowrap;margin-right:4px;flex-shrink:0}
+.tab{background:#0a1428;border:2px solid #1e3060;border-radius:8px;color:#5577aa;
+    padding:7px 13px;font-size:13px;font-weight:bold;cursor:pointer;flex-shrink:0}
+.tab.on{background:#1a2e60;border-color:#5588dd;color:#ccdeff}
+.hb{background:#162040;border:1.5px solid #2a4070;border-radius:7px;color:#99bbdd;
+    padding:6px 11px;font-size:12px;cursor:pointer;flex-shrink:0}
+.hb:hover{border-color:#5577bb;color:#ccdeff}
+.hb.on{background:#1a2e60;border-color:#5588dd;color:#ccddff;font-weight:bold}
+.hb.gon{background:#0c2218;border-color:#33aa66;color:#66ffaa;font-weight:bold}
+#bd{-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;min-height:0;overflow:hidden}
+/* 좌측 패널 */
+#lp{width:274px;-webkit-flex-shrink:0;flex-shrink:0;background:#0d1630;border-right:2px solid #1e3060;
+    display:flex;flex-direction:column;overflow:hidden}
+.lps{-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}
+.sec{padding:10px 13px;border-bottom:1px solid #1a2a50;flex-shrink:0}
+.st{font-size:11px;color:#99aacc;letter-spacing:1px;text-transform:uppercase;
+    margin-bottom:6px;font-weight:bold}
+.tr{display:flex;align-items:center;gap:5px}
+.tr label{font-size:13px;color:#ccdeff;min-width:20px;font-weight:bold}
+.tr input[type=range]{flex:1;accent-color:#5599ff;height:28px;cursor:pointer}
+.tv{font-size:18px;color:#fff;min-width:44px;text-align:right;font-weight:bold}
+.ar{display:flex;justify-content:space-between;align-items:center;padding:5px 0;
+    border-bottom:1px solid #1a2a50}
+.ar:last-child{border-bottom:none}
+.ak{font-size:13px;color:#aabbcc}
+.av{font-size:19px;font-weight:bold}
+.eb{height:11px;background:#0e1e38;border-radius:5px;overflow:hidden;margin:5px 0 2px}
+.ef{height:100%;border-radius:5px;transition:width .1s,background .2s}
+.el{font-size:13px;color:#99aacc;text-align:center;font-weight:bold}
+.fbox{margin:7px 13px;padding:10px 12px;background:#091525;border:2px solid #2a5080;
+    border-radius:8px;text-align:center;flex-shrink:0}
+.fm{font-size:20px;color:#ffdd44;font-weight:bold}
+.fs{font-size:12px;color:#88aacc;margin-top:4px}
+.mi{font-size:13px;color:#ccdeff;line-height:1.8;white-space:pre-line;
+    padding:9px 13px;flex-shrink:0}
+/* 퀴즈 */
+.quiz-wrap{margin:7px 13px;flex-shrink:0}
+.quiz-q{font-size:13.5px;color:#ccdeff;font-weight:bold;margin-bottom:9px;line-height:1.5}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qbtn{padding:12px 4px;background:#101e38;border:2px solid #2a4070;border-radius:8px;
+    color:#ccdeff;font-size:14px;font-weight:bold;cursor:pointer}
+.qbtn:hover{background:#1a2e55;border-color:#4477cc}
+.qbtn.correct{background:#0a2a18;border-color:#33cc66;color:#66ff88}
+.qbtn.wrong{background:#2a0a0a;border-color:#cc3333;color:#ff8888}
+.qmsg{font-size:12.5px;margin-top:7px;padding:7px 10px;border-radius:6px;line-height:1.5}
+.qok{background:#0a2015;color:#55ff88;border:1px solid #22aa44}
+.qno{background:#200a0a;color:#ff8888;border:1px solid #aa2222}
+.gobtn{margin:6px 13px 4px;padding:11px 4px;border-radius:9px;font-size:14px;
+    cursor:pointer;font-family:inherit;font-weight:bold;flex-shrink:0;
+    background:#142250;border:2px solid #3366cc;color:#aaccff;
+    width:calc(100% - 26px);display:block}
+.gobtn:hover{background:#1a2e6a}
+.gobtn.red{background:#280c0c;border-color:#cc3333;color:#ffaaaa}
+/* 탐구 카드 */
+.iq-card{margin:6px 13px;padding:10px 12px;background:#091525;
+    border:1.5px solid #1e3060;border-radius:8px;flex-shrink:0;display:none}
+.iq-card.show{display:block}
+.iq-card.active{border-color:#4466cc}
+.iq-tt{font-size:11px;color:#6688bb;letter-spacing:1px;text-transform:uppercase;
+    font-weight:bold;margin-bottom:6px}
+.iq-bd{font-size:13px;color:#ccdeff;line-height:1.75;white-space:pre-line}
+/* 예상 선택지 */
+.pred-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+.pbtn{padding:10px 4px;background:#0d1c35;border:1.5px solid #2a4070;border-radius:7px;
+    color:#aabbdd;font-size:13px;font-weight:bold;cursor:pointer}
+.pbtn:hover{border-color:#4477cc;color:#ccdeff}
+.pbtn.picked{border-color:#5588dd;color:#99ccff;background:#1a2e55}
+/* 각도 입력 */
+.ang-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.ang-input{width:70px;background:#0c1830;border:2px solid #2a4070;border-radius:6px;
+    color:#ccdeff;padding:7px 10px;font-size:18px;font-weight:bold;text-align:center;
+    font-family:inherit;outline:none}
+.ang-input:focus{border-color:#5588ff}
+.ang-unit{font-size:16px;color:#99aacc;font-weight:bold}
+.ang-check{padding:8px 14px;background:#142250;border:2px solid #3366cc;border-radius:7px;
+    color:#aaccff;font-size:13px;font-weight:bold;cursor:pointer;font-family:inherit}
+.ang-check:hover{background:#1a2e6a}
+/* 선택자 공식 */
+.sel-lbl{font-size:16px;color:#ffdd44;font-weight:bold}
+.sel-btns{display:flex;gap:5px;margin-top:5px}
+.sel-btn{padding:9px 13px;background:#0d1c35;border:1.5px solid #2a4070;
+    border-radius:6px;color:#aabbdd;font-size:14px;font-weight:bold;
+    cursor:pointer;transition:all .12s}
+.sel-btn:hover{border-color:#4477cc;color:#ccdeff}
+.sel-btn.chosen{border-color:#ffdd44;color:#ffee88;background:#1a1500}
+.sel-result{font-size:19px;font-weight:bold;text-align:center;padding:8px;
+    background:#091525;border-radius:7px;margin-top:6px;color:#666}
+/* 미션 */
+.mgoal{background:#081a14;border:2px solid #1a5533;border-radius:8px;
+    padding:8px 12px;text-align:center;margin:6px 13px;flex-shrink:0}
+.mgk{font-size:12px;color:#66aa88;margin-bottom:3px}
+.mgv{font-size:22px;font-weight:bold;color:#44ff88}
+.mgs{font-size:12px;color:#336644;margin-top:3px}
+.mhint{font-size:13px;color:#77bb99;line-height:1.7;background:#060e10;
+    border:1px solid #1a3a22;border-radius:6px;padding:8px 11px;
+    margin:0 13px 6px;flex-shrink:0;white-space:pre-line}
+.mdn{background:#062010;border:2px solid #00aa44;border-radius:8px;
+    padding:6px 12px;text-align:center;margin:0 13px 4px;flex-shrink:0;display:none}
+.mdn-t{font-size:13px;color:#44ff88;font-weight:bold}
+.lbtn{width:calc(100% - 26px);margin:8px 13px 4px;padding:13px 4px;border-radius:9px;
+    background:linear-gradient(135deg,#1a0800,#330800);border:2px solid #ff6600;
+    color:#ffaa44;font-size:15px;font-weight:bold;cursor:pointer;display:none}
+@keyframes lp2{0%,100%{box-shadow:0 0 0 0 rgba(255,100,0,.4)}50%{box-shadow:0 0 14px 5px rgba(255,100,0,.18)}}
+.lbtn{animation:lp2 2s ease-in-out infinite}
+/* 메인 */
+#cw{flex:1;position:relative;min-width:0;overflow:hidden}
+#c3{position:absolute;inset:0;width:100%;height:100%;display:block}
+#hud{position:absolute;top:12px;left:12px;background:rgba(8,14,28,.92);
+     border:1.5px solid #2a4070;border-radius:10px;padding:9px 14px;
+     pointer-events:none;z-index:5}
+.hr{display:flex;align-items:center;gap:8px;line-height:2.2}
+.hk{color:#8899bb;min-width:54px;font-size:12.5px;font-weight:bold}
+.hv{font-weight:bold;min-width:52px;text-align:right;font-size:15px}
+#ld{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:#0a1020;z-index:40;font-size:16px;color:#88aaff}
+/* 오버레이 */
+.ovbase{display:none;position:absolute;inset:0;z-index:30;
+    flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:10px}
+#ph3ov{background:rgba(4,0,0,.96)}
+.ov-scan{position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,rgba(255,0,0,.85),transparent);
+    animation:scan 1.8s linear infinite}
+@keyframes scan{0%{top:0}100%{top:100%}}
+.ov-badge{font-size:10px;letter-spacing:3px;color:#ff4444;background:#1a0000;
+    border:1px solid #660000;border-radius:3px;padding:3px 14px}
+.ov-title{font-size:20px;color:#ff4444;font-weight:bold;text-align:center;
+    animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ov-sep{width:70%;height:1px;background:#440000}
+.ov-stat{background:#120000;border:1px solid #440000;border-radius:8px;
+    padding:12px 20px;text-align:center;min-width:220px}
+.ov-stat-k{font-size:13px;color:#aa5555;margin-bottom:4px}
+.ov-stat-v{font-size:26px;font-weight:bold;color:#ff6666}
+.ov-msg{font-size:13px;color:#cc8888;text-align:center;line-height:1.85;white-space:pre-line}
+.ov-btn{background:#1a0000;border:2px solid #cc3333;border-radius:9px;
+    color:#ff8888;padding:12px 32px;font-size:15px;cursor:pointer;font-weight:bold}
+.ov-btn:hover{background:#280000;border-color:#ff4444}
+#mwin{background:radial-gradient(circle,rgba(0,45,12,.97),rgba(0,12,5,.97))}
+@keyframes neon{0%,100%{box-shadow:0 0 22px #00ff66,0 0 44px #00ff66;border-color:#00ff66}
+    50%{box-shadow:0 0 8px #00ff66,0 0 18px #00ff66;border-color:#00aa44}}
+.mwin-box{border:2px solid #00ff66;border-radius:14px;padding:20px 30px;
+    text-align:center;animation:neon 1.5s ease-in-out infinite;max-width:360px;width:90%}
+.mwin-ttl{font-size:16px;color:#00ff88;font-weight:bold;letter-spacing:2px;margin-bottom:8px}
+.mwin-body{font-size:13px;color:#88ffaa;line-height:1.85;white-space:pre-line;margin-bottom:10px}
+.mwin-ok{width:100%;padding:11px;background:#062010;border:2px solid #00aa44;
+    border-radius:8px;color:#44ff88;font-size:14px;font-weight:bold;cursor:pointer}
+#launchOv{background:rgba(0,0,2,.98)}
+.l-title{font-size:22px;color:#ff8800;font-weight:bold;text-align:center;
+    animation:blink .6s ease-in-out infinite}
+.l-cnt{font-size:72px;font-weight:bold;color:#ff8800;animation:blink .5s ease-in-out infinite}
+.l-body{font-size:14px;color:#ffaa66;text-align:center;line-height:1.9;white-space:pre-line}
+.l-ok{background:#1a0800;border:2px solid #ff6600;border-radius:9px;
+    color:#ffaa44;padding:12px 32px;font-size:15px;cursor:pointer;font-weight:bold}
+#aibox{background:rgba(0,8,4,.93)}
+.ai-panel{background:#041a0a;border:2px solid #00cc55;border-radius:14px;
+    width:100%;max-width:520px;max-height:92%;display:flex;flex-direction:column;overflow:hidden}
+.ai-hdr{background:#061f0c;border-bottom:1px solid #00aa44;padding:11px 16px;
+    display:flex;align-items:center;gap:9px;flex-shrink:0}
+.ai-dot{width:12px;height:12px;background:#00ff66;border-radius:50%;
+    animation:neonDot 1.2s ease-in-out infinite}
+@keyframes neonDot{0%,100%{opacity:1;box-shadow:0 0 6px #00ff66}50%{opacity:.4}}
+.ai-ht{font-size:13px;color:#00ff88;font-weight:bold}
+.ai-bdy{flex:1;padding:14px 16px;overflow-y:auto;min-height:0}
+.ai-txt{font-size:13px;color:#88ffaa;line-height:1.85;white-space:pre-wrap;min-height:80px}
+.ai-cur{display:inline-block;width:2px;height:15px;background:#00ff88;
+    animation:cur .6s ease-in-out infinite;vertical-align:text-bottom}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
+.ai-inp{padding:11px 16px;border-top:1px solid #00aa44;flex-shrink:0}
+.ai-ta{width:100%;background:#031008;border:1.5px solid #007733;border-radius:7px;
+    color:#88ffaa;padding:9px 12px;font-size:13px;font-family:inherit;
+    resize:none;line-height:1.65;outline:none;height:78px}
+.ai-ta:focus{border-color:#00cc55}
+.ai-sub{width:100%;margin-top:9px;padding:11px;background:#062010;
+    border:2px solid #00aa44;border-radius:8px;color:#44ff88;
+    font-size:13px;font-weight:bold;cursor:pointer}
+/* 우측 2D */
+#rp{width:210px;flex-shrink:0;background:#0f1b35;border-left:2px solid #2a4070;
+    display:flex;flex-direction:column}
+#tvw{flex:0 0 35%;position:relative;border-bottom:1.5px solid #1e3060;overflow:hidden}
+#svw{flex:1;position:relative;overflow:hidden}
+.vt{position:absolute;top:6px;left:8px;font-size:9.5px;color:#6688bb;
+    letter-spacing:1px;text-transform:uppercase;z-index:5;font-weight:bold;pointer-events:none}
+.vc{display:block;width:100%;height:100%}
+#lp3inner{display:none;flex-direction:column;align-items:center;justify-content:center;
+    flex:1;gap:12px;padding:16px;text-align:center;background:#160000}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.85}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hd">
+    <span class="ti">☀️ 정사영 탐구</span>
+    <button class="tab on" id="tab1">📐 개념탐구</button>
+    <button class="tab" id="tab2">🚀 미션탐구</button>
+    <div style="width:1px;height:24px;background:#1e3060;margin:0 2px;flex-shrink:0"></div>
+    <button class="hb on" id="bM">🪐 Mars</button>
+    <button class="hb" id="bG">📐 기하</button>
+    <button class="hb" id="bL" disabled style="opacity:.35;cursor:not-allowed">☀️ 광선</button>
+    <button class="hb" id="bR" style="margin-left:auto">↺</button>
+    <button class="hb" id="bHub" onclick="window.location.href='index.html'" style="display:none">◀ 사령부</button>
+  </div>
+  <div id="bd">
+    <div id="lp">
+      <div id="lp3inner">
+        <div style="font-size:32px;animation:blink 1s ease-in-out infinite">🚨</div>
+        <div style="font-size:13px;color:#ff8888;font-weight:bold">긴급 상황!</div>
+        <div style="font-size:12px;color:#cc5555;line-height:1.7">브리핑 화면 확인!</div>
+      </div>
+      <div class="lps" id="lps">
+        <!-- 슬라이더 항상 최상단 -->
+        <div class="sec" id="slSec">
+          <div class="st" id="slTitle">미션! 패널을 얼마나 몇 도(°)로 조절해야할까?</div>
+          <div class="tr">
+            <label>θ</label>
+            <input type="range" class="thsl" id="sl" min="0" max="90" step="1" value="0">
+            <span class="tv" id="vt">0°</span>
+          </div>
+        </div>
+
+        <!-- ══ Phase 1 콘텐츠 ══ -->
+        <div id="p1content">
+          <div class="sec">
+            <div class="st">넓이 관찰</div>
+            <div class="ar"><span class="ak">S (패널)</span><span class="av" style="color:#66aaff">100</span></div>
+            <div class="ar"><span class="ak">S' (그림자)</span><span class="av" style="color:#cc77ff" id="dsp1">100.0</span></div>
+          </div>
+          <div class="fbox">
+            <div style="font-size:12px;color:#88aacc;margin-bottom:5px">S' / S 의 값</div>
+            <div class="fm" id="cosDisplay">1.000</div>
+            <div class="fs">이 값이 어떤 삼각함수일까요?</div>
+          </div>
+          <div class="mi">θ=0°: 패널 눕힘 → S'=S
+θ를 올리면 S'이 줄어요!
+
+S'/S 값을 보며 다음 중 [?]에 
+알맞은 것을 추측해보세요.</div>
+          <div class="quiz-wrap" id="quizWrap">
+            <div class="quiz-q">S' = S × [?]
+<span style="font-size:12px;color:#8899bb"></span></div>
+            <div class="qg">
+              <button class="qbtn" data-val="sin">sin θ</button>
+              <button class="qbtn" data-val="cos">cos θ</button>
+              <button class="qbtn" data-val="tan">tan θ</button>
+              <button class="qbtn" data-val="inv">1/cos θ</button>
+            </div>
+            <div id="qmsg" style="display:none" class="qmsg"></div>
+          </div>
+          <div id="formulaReveal" style="display:none">
+            <div class="fbox">
+              <div class="fm">S' = S · cos θ</div>
+              <div class="fs">패널-지면 이면각이 θ일 때</div>
+            </div>
+            <button class="gobtn" id="goMission">🚀 미션 탐구로 →</button>
+          </div>
+        </div>
+
+        <!-- ══ Phase 2 콘텐츠 ══ -->
+        <div id="p2content" style="display:none;flex-direction:column">
+          <!-- Step 0: 예상하기 (슬라이더 있지만 그림자 숨김) -->
+          <div class="iq-card show active" id="iq0">
+            <div class="iq-tt">Step 1  예상하기</div>
+            <div class="iq-bd">패널을 0°→90°로 세울 때 바닥의 그림자 크기는 어떻게 변할까요?</div>
+            <div class="pred-grid">
+              <button class="pbtn" data-ans="grow">① 계속 커진다</button>
+              <button class="pbtn" data-ans="shrink">② 계속 작아진다</button>
+              <button class="pbtn" data-ans="both">③ 커졌다 작아진다</button>
+              <button class="pbtn" data-ans="same">④ 변화 없다</button>
+            </div>
+            <div id="pred-msg" style="display:none;margin-top:8px;font-size:12.5px;
+                color:#aabbdd;line-height:1.6;padding:7px;background:#0a1425;border-radius:6px"></div>
+            <button class="gobtn" id="iq0btn" style="margin:8px 0 0;display:none">태양은 어디에?</button>
+            <button class="gobtn" id="finalAnswerCheck" style="margin:8px 0 0;display:none">✅ 최종답 확인</button>
+            <div id="shadowDescMsg" style="display:none;margin-top:7px;font-size:12.5px;
+                padding:7px;border-radius:6px;line-height:1.5"></div>
+            <button class="gobtn" id="iq1btn" style="margin:8px 0 0;display:none">Step 3으로 →</button>
+          </div>
+
+          <!-- Step 2: 탐구 (그림자 공개) -->
+          <div class="iq-card" id="iq1">
+            <div class="iq-tt">Step 2  그림자 직접 확인!</div>
+            <div class="iq-bd">슬라이더로 0~90° 움직이며
+그림자 변화를 직접 관찰해보세요.
+
+관찰 후, Step 1로 돌아가 다시 답해보세요!</div>
+            <button class="gobtn" id="shadowShowBtn" style="margin:5px 0 0">그림자 보기 👁️</button>
+            <button class="gobtn" id="backToStep1Btn" style="margin:5px 0 0;display:none">← Step 1로 돌아가기</button>
+          </div>
+
+          <!-- Step 3: 에너지 최대 효율 각도 찾기 -->
+          <div class="iq-card" id="iq2">
+            <div class="iq-tt">Step 3  언제 에너지 효율이 최대일까?</div>
+            <div class="iq-bd">슬라이더로 패널을 움직여 에너지 효율이 최대가 되는 패널 각도를 찾아보세요!
+<button class="gobtn" id="energyInfoBtn" 
+  style="margin:8px 0;padding:8px;font-size:12px;background:#0a1828;border-color:#3366aa">[읽을거리📖]에너지효율의 원리
+</button></div>
+            <div style="font-size:11px;color:#6688bb;margin-top:4px">
+              슬라이더를 조작하세요!</div>
+<div class="ang-row" style="flex-direction: column; align-items: stretch;">
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <input type="range" id="angInput" min="0" max="135" step="1" value="0" style="flex:1;">
+        <span class="ang-unit" id="vtAngInput" style="width: 40px;">0°</span>
+    </div>
+    <button class="ang-check" id="angCheck" style="margin-top:5px;">정답 확인</button>
+</div>
+            <div id="angMsg" style="display:none;margin-top:7px;font-size:12.5px;
+                padding:7px;border-radius:6px"></div>
+          </div>
+
+          <!-- Step 3: 이유 & 결과 -->
+          <div class="iq-card" id="iq3">
+            <div class="iq-tt">Step 4  왜 45°일까?</div>
+            <div class="iq-bd" id="iq3body">✅ θ=45°에서 에너지 효율 최대!
+
+💡 왜 45°일까요?
+지면 α는 수평보다 -15° 기울어짐.
+태양은 지면에서 30° 고도
+→ 수평 기준 30°+15° = 45° 고도
+
+패널을 45° 세우면 빛과 패널이 정확히 수직(90°)!
+→ 직사광선을 정면으로 받아 그림자가 최대가 됩니다.
+(힌트: Side View에서 확인해보세요!)</div>
+            <button class="gobtn" id="iq3btn" style="margin:8px 0 0">공식 찾기 →</button>
+          </div>
+
+          <!-- Step 4: 공식 선택 -->
+          <div class="iq-card" id="iq4">
+            <div class="iq-tt">Step 5  그림자 넓이 공식 발견</div>
+            <div class="iq-bd">θ=45°일 때, 그림자 넓이는 200
+
+S' = 100 [?] [?] [?°] = 200
+가 되는 조합을 찾아보세요!
+
+💡 힌트:
+수평 기준 패널 45° + 경사면 15° = ?°
+</div>
+            <div style="margin-top:8px">
+              <div style="font-size:11px;color:#6688bb;margin-bottom:4px">연산자</div>
+              <div class="sel-btns">
+                <button class="sel-btn" data-g="op" data-v="mul">×</button>
+                <button class="sel-btn" data-g="op" data-v="div">÷</button>
+              </div>
+            </div>
+            <div style="margin-top:7px">
+              <div style="font-size:11px;color:#6688bb;margin-bottom:4px">삼각함수</div>
+              <div class="sel-btns">
+                <button class="sel-btn" data-g="fn" data-v="cos">cos</button>
+                <button class="sel-btn" data-g="fn" data-v="sin">sin</button>
+              </div>
+            </div>
+            <div style="margin-top:7px">
+              <div style="font-size:11px;color:#6688bb;margin-bottom:4px">각도 (빛과 패널의 각도)</div>
+              <div class="sel-btns">
+                <button class="sel-btn" data-g="ang" data-v="30">30°</button>
+                <button class="sel-btn" data-g="ang" data-v="45">45°</button>
+                <button class="sel-btn" data-g="ang" data-v="60">60°</button>
+              </div>
+            </div>
+            <div class="sel-result" id="selResult">S' = S ×/÷ ? = ?</div>
+            <div id="selMsg" style="display:none" class="qmsg"></div>
+            <button class="gobtn" id="selCheck" style="margin:6px 0 0">확인!</button>
+          </div>
+
+          <!-- 미션 영역 -->
+          <div id="missionArea" style="display:none;flex-direction:column">
+            <!-- 전력 상태 게이지 -->
+            <div class="mgoal" style="background:#0a0818;border-color:#2a4070">
+              <div class="mgk" style="color:#8899bb">생명유지장치 전력 상태</div>
+              <div class="mgv" style="color:#ff6666" id="powerLevel">18%</div>
+              <div class="mgs" style="color:#445566">최소 필요 전력: 75%</div>
+            </div>
+            
+            <div class="mgoal">
+              <div class="mgk">🚨 긴급 미션</div>
+              <div class="mgv" id="goalV" style="font-size:20px">패널을 45°로 맞추세요!</div>
+              <div class="mgs">빛과 수직 → 최대 전력 흡수</div>
+            </div>
+            <div class="mhint" id="missionHint">⚠️ 위 슬라이더를 조작하여
+패널 각도를 정확히 <strong style="color:#ffdd44">45°</strong>로 맞추세요!
+
+공식: S' = S × cos θ
+θ=45° → 빛과 패널이 수직!
+→ 정사영 면적 최대화!
+→ 생명유지장치 전력 복구!</div>
+            <div class="mdn" id="m1done" style="background:#062010;border-color:#00aa44">
+              <div class="mdn-t">✅ 각도 45° 달성! 전력 복구 성공!</div>
+            </div>
+            <button class="lbtn" id="lBtn" onclick="triggerLaunch()">⚡ 생명유지장치 가동!</button>
+            <button class="gobtn" id="retryBtn"
+                style="background:#0a0f20;border-color:#2a3a66;color:#6688aa;font-size:11px;padding:7px">
+              ↺ 처음부터
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 메인 3D -->
+    <div id="cw">
+      <canvas id="c3"></canvas>
+      <div id="ld">⏳ 초기화 중...</div>
+      <div class="ovbase" id="ph3ov">
+        <div class="ov-scan"></div>
+        <div class="ov-badge">⚠ ARCTURUS EMERGENCY ⚠</div>
+        <div class="ov-title">⚡ 생명유지장치 전력 부족 ⚡</div>
+        <div class="ov-sep"></div>
+        <div class="ov-stat">
+          <div class="ov-stat-k">현재 전력 상태</div>
+          <div class="ov-stat-v">18%</div>
+        </div>
+        <div class="ov-msg">생명유지장치 최소 필요 전력: 75%
+화성 착륙지 경사면 -15°
+태양이 화성에 30° 고도로 비춤!
+
+패널 각도를 최적화하여
+정사영 넓이를 최대화하고
+생명유지장치 전력을 복구하라!</div>
+        <button class="ov-btn" id="acceptBtn">🚀 임무 수락!</button>
+      </div>
+      <div class="ovbase" id="mwin">
+        <div class="mwin-box">
+          <div class="mwin-ttl" id="mwinT">MISSION ACCOMPLISHED</div>
+          <div class="mwin-body" id="mwinB"></div>
+          <button class="mwin-ok" id="mwinOk">확인 →</button>
+        </div>
+      </div>
+      <div class="ovbase" id="launchOv">
+        <div class="l-title" id="lTitle">⚡ 생명유지장치 전력 충전 중...</div>
+        <div style="width:320px;height:32px;background:#0a1828;border:2px solid #3366aa;border-radius:15px;margin:20px auto;overflow:hidden">
+          <div id="energyBar" style="width:18%;height:100%;background:linear-gradient(90deg,#5588ff,#44ffaa);transition:width 0.3s ease-out"></div>
+        </div>
+        <div style="font-size:19px;color:#88aaff;font-weight:bold;margin:10px 0" id="energyPercent">18%</div>
+        <div class="l-cnt" id="lCnt" style="display:none;font-size:18px;color:#88aaff">시스템 점검 중...</div>
+        <div class="l-body" id="lBody"></div>
+        <button class="l-ok" id="lOkBtn" style="display:none">⚡ 전력 복구 완료!</button>
+      </div>
+      <style>
+      @keyframes flyUp {
+        0% { transform: translateY(100px) scale(0.5); opacity:0; }
+        20% { opacity:1; }
+        100% { transform: translateY(-400px) scale(1.5); opacity:0; }
+      }
+      </style>
+      <!-- 에너지 효율 읽을거리 팝업 -->
+      <div class="ovbase" id="energyInfoOv" style="background:rgba(0,8,16,.95)">
+        <div style="background:#0a1a2a;border:2px solid #3366aa;border-radius:12px;
+                    padding:20px 24px;max-width:500px;width:90%;max-height:80%;overflow-y:auto">
+          <div style="font-size:16px;color:#66aaff;font-weight:bold;margin-bottom:12px;text-align:center">
+            📖 에너지 효율의 수학적 원리(Lambert의 코사인 법칙)
+          </div>
+          <div style="font-size:13px;color:#aaccee;line-height:1.8;white-space:pre-line">
+📊 패널 각도와 효율의 상관관계
+태양광 패널의 에너지 효율(E)은 태양광선과 패널의 법선(수직선)이 이루는 각도(θ)에 대한 코사인 값으로 결정됩니다.
+
+E = cos(θ)
+
+이 원리는 태양광 발전뿐만 아니라 조명 설계, 태양열 시스템 등 다양한 분야에서 활용됩니다.
+(💡교육과정 외 심화 내용. 참고만 해주세요!)</div>
+          <button style="width:100%;margin-top:16px;padding:11px;background:#0d1f35;
+                         border:2px solid#4477bb;border-radius:8px;color:#88aaff;
+                         font-size:14px;font-weight:bold;cursor:pointer" 
+                  id="energyInfoClose">닫기</button>
+        </div>
+      </div>
+      <div class="ovbase" id="aibox">
+        <div class="ai-panel">
+          <div class="ai-hdr">
+            <div class="ai-dot"></div>
+            <div class="ai-ht">AI 에너지 공학 어드바이저</div>
+            <div style="margin-left:auto;font-size:10px;color:#44aa66">KOSA-1</div>
+          </div>
+          <div class="ai-bdy"><div class="ai-txt" id="aiText"></div></div>
+          <div class="ai-inp">
+            <textarea class="ai-ta" id="aiInput"
+                placeholder="공식을 포함하여 일반화된 문장을 작성하세요."></textarea>
+            <button class="ai-sub" id="aiSub">🔬 AI에게 에너지 규정 검인받기</button>
+          </div>
+        </div>
+      </div>
+      <div id="hud">
+        <div class="hr"><span class="hk">θ =</span><span class="hv" style="color:#aaccff" id="hudT">0°</span></div>
+        <div class="hr"><span class="hk">S =</span><span class="hv" style="color:#66aaff">100</span></div>
+        <div class="hr"><span class="hk">S' =</span><span class="hv" style="color:#cc77ff" id="hudSp">100.0</span></div>
+      </div>
+    </div>
+
+    <!-- 우측 2D -->
+    <div id="rp">
+      <div id="tvw"><div class="vt">TOP VIEW</div><canvas class="vc" id="tc"></canvas></div>
+      <div id="svw"><div class="vt">SIDE VIEW</div><canvas class="vc" id="sc"></canvas></div>
+    </div>
+  </div>
+</div>
+<script>
+// Three.js를 동적으로 로드 — iOS Safari의 defer 타이밍 버그 우회
+(function(){
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload=function(){setTimeout(boot,60);};
+  s.onerror=function(){document.getElementById('ld').textContent='⚠️ 네트워크 오류';};
+  document.head.appendChild(s);
+})();
+</script>
+<script>
+
+function boot(){
+const PI=Math.PI,DEG=PI/180,R15=15*DEG;
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const TMU=THREE.MathUtils;
+
+/* ═══ 수학 ════════════════════════════════════════════════
+  Phase 2 설정:
+  - 패널: θ=0°에서 수평, θ=90°에서 수직 (수평 기준 각도)
+  - 태양: 수평 기준 45° 고도 → cot(45°)=1
+  - 사선 그림자: S(cosθ + sinθ), 최대 θ=45°에서 S√2≈200
+  - 수직 투영(정사영): S×cosθ
+═══════════════════════════════════════════════════════════ */
+const PW=5,PH=4,PW2=PW/2,S_AREA=100;
+const HY=0.05;  // 수평면 높이
+const HX=0;     // 교선 x좌표
+const HZ=0;     // 교선 z좌표 (화성면과 수평면의 교선)
+
+// Phase 2 사선 그림자 비율 (경사면 투영 고려)
+const oblR = t => {
+  const degree = t / DEG; // 패널 각도 (수평 기준, 도 단위)
+  
+  // === 벡터 정의 ===
+  // 광선 방향: 수평 기준 45° 아래 (정규화)
+  const lightDir = {
+    x: Math.cos(45*DEG),
+    y: -Math.sin(45*DEG),
+    z: 0
+  };
+  
+  // 패널 법선: 수평 기준 θ° 회전
+  const panelNormal = {
+    x: -Math.sin(t),
+    y: Math.cos(t),
+    z: 0
+  };
+  
+  // 경사면 법선: -15° 기울어짐 (위쪽 방향)
+  const slopeNormal = {
+    x: Math.sin(15*DEG),
+    y: Math.cos(15*DEG),
+    z: 0
+  };
+  
+  // === 그림자 계산 ===
+  // 1. 광선과 패널의 내적 (광량)
+  const lightDotPanel = -(lightDir.x * panelNormal.x + lightDir.y * panelNormal.y);
+  
+  // 2. 광선과 경사면의 내적
+  const lightDotSlope = -(lightDir.x * slopeNormal.x + lightDir.y * slopeNormal.y);
+  
+  // 3. 그림자 넓이 비율
+  // 패널에서 경사면으로 투영
+  if(lightDotSlope <= 0.01) return 0; // 광선이 경사면에 거의 평행
+  if(lightDotPanel <= 0) return 0; // 패널이 광선 뒤편
+  
+  // 그림자 비율 = (광선·패널) / (광선·경사면)
+  const ratio = lightDotPanel / lightDotSlope;
+  
+  // 현실적인 범위로 제한
+  return Math.max(0, Math.min(ratio, 5));
+};
+
+const oblSp = t => (S_AREA * oblR(t)).toFixed(1);
+
+// Phase 2 패널 꼭짓점 (수평 기준으로 θ 올림)
+function p2PV(t){
+  // 위에서 설정한 HY(0.05)를 사용합니다.
+  const BL = V3(HX - PW2, HY, HZ), BR = V3(HX + PW2, HY, HZ);
+  
+  // 패널이 수평(0도)에서 뒤로 넘어가는 방향(165도)으로 회전하도록 설정
+  // 방향 벡터 pd 계산
+  const pd = V3(0, Math.sin(t), Math.cos(t)); 
+  
+  return {
+    BL, 
+    BR, 
+    TL: BL.clone().addScaledVector(pd, PH), 
+    TR: BR.clone().addScaledVector(pd, PH)
+  };
+}
+
+// 사선 그림자 꼭짓점 (수평 면 y=HY에 투영, 태양 45°)
+function p2ShadV(t){
+  const pv=p2PV(t);
+  // 그림자를 경사면에 투영
+  // 경사면 공식: y = HY - z * tan(15°)
+  // 태양광선: 45도 비스듬히 (0, -1/√2, 1/√2)
+  
+  const sdz=PH*oblR(t);  // 그림자 z 이동거리
+  
+  // 경사면 위의 그림자 꼭짓점
+  // z 위치에 따라 y 높이 계산
+  const getShadowY = (z) => HY - z * Math.tan(R15);
+  
+  return{
+    BL:V3(HX-PW2, getShadowY(HZ), HZ),
+    BR:V3(HX+PW2, getShadowY(HZ), HZ),
+    TL:V3(HX-PW2, getShadowY(HZ+sdz), HZ+sdz),
+    TR:V3(HX+PW2, getShadowY(HZ+sdz), HZ+sdz)
+  };
+}
+
+// Phase 1 (수직광, 수평지면)
+function p1PV(t){
+  return{BL:V3(-PW2,.02,0),BR:V3(PW2,.02,0),
+    TL:V3(-PW2,.02+PH*Math.sin(t),PH*Math.cos(t)),
+    TR:V3(PW2,.02+PH*Math.sin(t),PH*Math.cos(t))};
+}
+function p1ProjV(t){
+  return{BL:V3(-PW2,.01,0),BR:V3(PW2,.01,0),
+    TL:V3(-PW2,.01,PH*Math.cos(t)),TR:V3(PW2,.01,PH*Math.cos(t))};
+}
+const p1Sp=t=>(S_AREA*Math.abs(Math.cos(t))).toFixed(1);
+const p1Cos=t=>Math.abs(Math.cos(t));
+
+/* ═══ 상태 ════════════════════════════════════════════════ */
+let phase=1,theta=0,marsMode=true,lightOn=false;
+let iqStep=0,shadowVisible=false;
+let missionActive=false,missionDone=false;
+let launchDone=false,launchAnim=0,launchAnimating=false;
+let selOp=null,selFn=null,selAng=null;
+let predAns=null;
+let CAM={th:.80,ph:.60,r:13};
+let drag={on:false,x:0,y:0},clock=0;
+let stationBaseY=0,stationZ=0; // 전력기지 위치 (나중에 설정)
+
+/* ═══ 렌더러 ══════════════════════════════════════════════ */
+const cvs=document.getElementById('c3'),wrap=document.getElementById('cw');
+const rdr=new THREE.WebGLRenderer({
+  canvas:cvs,
+  antialias:true,
+  alpha:false,
+  powerPreference:'default',
+  preserveDrawingBuffer:false
+});
+rdr.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(48,1,.1,200);
+function updCam(){
+  const{th,ph,r}=CAM;
+  cam.position.set(r*Math.sin(ph)*Math.sin(th),r*Math.cos(ph),r*Math.sin(ph)*Math.cos(th));
+  cam.lookAt(phase===1?V3(0,1,2):V3(0,1.5,2));
+}
+scene.add(new THREE.AmbientLight(0xffaa66,.55));
+const sunL=new THREE.DirectionalLight(0xffee88,1.0);sunL.position.set(5,15,5);scene.add(sunL);
+
+/* ═══ 텍스처 ══════════════════════════════════════════════ */
+function makeMarsT(){
+  const Sz=128,c=document.createElement('canvas');c.width=c.height=Sz;
+  const ctx=c.getContext('2d'),id=ctx.createImageData(Sz,Sz);
+  for(let j=0;j<Sz;j++) for(let i=0;i<Sz;i++){
+    const n=Math.sin(i/Sz*18+j/Sz*13)*.5+Math.sin(i/Sz*37-j/Sz*28)*.25;
+    const t=.5+n*.3,k=(j*Sz+i)*4;
+    id.data[k]=68+t*115|0;id.data[k+1]=14+t*33|0;id.data[k+2]=3+t*14|0;id.data[k+3]=255;
+  }
+  ctx.putImageData(id,0,0);
+  const tx=new THREE.CanvasTexture(c);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(7,7);return tx;
+}
+function makeSolarT(){
+  const CW=160,CH=160,c=document.createElement('canvas');c.width=CW;c.height=CH;
+  const ctx=c.getContext('2d'),cw=CW/10,rh=CH/10;
+  ctx.fillStyle='#0c1c3e';ctx.fillRect(0,0,CW,CH);
+  for(let r=0;r<10;r++) for(let cl=0;cl<10;cl++){
+    ctx.fillStyle=(r+cl)%2===0?'rgba(20,55,140,.9)':'rgba(30,75,170,.85)';
+    ctx.fillRect(cl*cw+1,r*rh+1,cw-2,rh-2);
+  }
+  ctx.strokeStyle='rgba(100,160,255,.9)';ctx.lineWidth=1.5;
+  for(let i=0;i<=10;i++){ctx.beginPath();ctx.moveTo(i*cw,0);ctx.lineTo(i*cw,CH);ctx.stroke();}
+  for(let j=0;j<=10;j++){ctx.beginPath();ctx.moveTo(0,j*rh);ctx.lineTo(CW,j*rh);ctx.stroke();}
+  ctx.fillStyle='rgba(180,220,255,.9)';ctx.font='bold 18px monospace';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('태양열패널',CW/2,CH/2-12);
+  ctx.fillText('S=100',CW/2,CH/2+12);
+  return new THREE.CanvasTexture(c);
+}
+const matSolar=new THREE.MeshStandardMaterial({map:makeSolarT(),side:THREE.DoubleSide,roughness:.25,metalness:.3});
+const matGeo=new THREE.MeshStandardMaterial({color:0x4488ff,transparent:true,opacity:.78,side:THREE.DoubleSide,depthWrite:false,emissive:0x112244,emissiveIntensity:.3});
+
+/* ═══ 지면 ════════════════════════════════════════════════ */
+const plA=R15-PI/2;
+const gnd1=new THREE.Mesh(new THREE.PlaneGeometry(24,24,16,16),
+  new THREE.MeshStandardMaterial({color:0x223344,roughness:.8}));
+gnd1.rotation.x=-PI/2;scene.add(gnd1);
+const grid1=new THREE.GridHelper(22,22,0x334455,0x1a2a33);scene.add(grid1);
+// Phase 2: 15° 기울어진 지면 (Mars 배경용)
+const gnd2=new THREE.Mesh(new THREE.PlaneGeometry(26,26,18,18),
+  new THREE.MeshStandardMaterial({map:makeMarsT(),side:THREE.DoubleSide,roughness:.9}));
+gnd2.rotation.x=plA;scene.add(gnd2);
+// Phase 2: 수평 기준면 (그림자가 맺히는 면, 반투명)
+const gndH=new THREE.Mesh(new THREE.PlaneGeometry(22,22),
+  new THREE.MeshStandardMaterial({color:0x1a2a3a,transparent:true,opacity:.18,
+  side:THREE.DoubleSide,depthWrite:false}));
+gndH.rotation.x=-PI/2;gndH.position.y=HY;scene.add(gndH);
+
+/* ═══ 메시 헬퍼 ═══════════════════════════════════════════ */
+function makeQG(){
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(12),3));
+  g.setIndex([0,1,2,0,2,3]);
+  g.setAttribute('uv',new THREE.BufferAttribute(new Float32Array([0,0,1,0,1,1,0,1]),2));
+  return g;
+}
+function setQG(g,v0,v1,v2,v3){
+  const p=g.attributes.position.array;
+  [v0,v1,v2,v3].forEach((v,i)=>{p[i*3]=v.x;p[i*3+1]=v.y;p[i*3+2]=v.z;});
+  g.attributes.position.needsUpdate=true;g.computeVertexNormals();
+}
+function makeEG(){
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(15),3));
+  return g;
+}
+function setEG(g,v0,v1,v2,v3){
+  const p=g.attributes.position.array;
+  [v0,v1,v2,v3,v0].forEach((v,i)=>{p[i*3]=v.x;p[i*3+1]=v.y;p[i*3+2]=v.z;});
+  g.attributes.position.needsUpdate=true;
+}
+
+const panelQG=makeQG(),shadowQG=makeQG(),projQG=makeQG();
+const panelM=new THREE.Mesh(panelQG,matSolar);scene.add(panelM);
+const panelEG=makeEG();
+scene.add(new THREE.Line(panelEG,new THREE.LineBasicMaterial({color:0x88bbff})));
+const shadowM=new THREE.Mesh(shadowQG,new THREE.MeshStandardMaterial({
+  color:0xffaa00,transparent:true,opacity:.60,side:THREE.DoubleSide,depthWrite:false,
+  emissive:0x442200,emissiveIntensity:.4}));
+shadowM.renderOrder=1;shadowM.visible=false;scene.add(shadowM);
+const projM=new THREE.Mesh(projQG,new THREE.MeshStandardMaterial({
+  color:0x5500aa,transparent:true,opacity:.80,side:THREE.DoubleSide,depthWrite:false,
+  emissive:0x220044,emissiveIntensity:.6}));
+projM.renderOrder=2;scene.add(projM);
+const projEG=makeEG();
+scene.add(new THREE.Line(projEG,new THREE.LineBasicMaterial({color:0xcc66ff})));
+
+/* ═══ 힌지 ════════════════════════════════════════════════ */
+const hG1=new THREE.BufferGeometry().setFromPoints([V3(-PW2,.05,0),V3(PW2,.05,0)]);
+const hinge1=new THREE.Line(hG1,new THREE.LineBasicMaterial({color:0xffdd44}));scene.add(hinge1);
+const hG2=new THREE.BufferGeometry().setFromPoints([V3(HX-PW2,HY,HZ),V3(HX+PW2,HY,HZ)]);
+const hinge2=new THREE.Line(hG2,new THREE.LineBasicMaterial({color:0xffdd44}));scene.add(hinge2);
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(.11,10,8),
+  new THREE.MeshStandardMaterial({color:0xffdd44,emissive:0xffdd44,emissiveIntensity:.6})));
+
+/* ═══ 스프라이트 ═══════════════════════════════════════════ */
+function mkSp(txt,col,fw=64,fh=36,fs=24){
+  const c=document.createElement('canvas');c.width=fw;c.height=fh;
+  const ctx=c.getContext('2d');ctx.font=`bold ${fs}px monospace`;ctx.fillStyle=col;ctx.fillText(txt,4,fs);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+  sp.scale.set(fw/50,fh/30,1);scene.add(sp);return sp;
+}
+const lbA=mkSp('α','#ffaa44',44,30,22);lbA.position.set(-5,.5,4.5);
+const lbS=mkSp('S','#66aaff',40,30,22);
+const lbSp=mkSp("S'",'#cc66ff',50,30,22);
+const lbSh=mkSp('그림자','#ffaa44',80,28,16);
+
+/* ═══ 바위 그룹 (경사면 따라감) ═══════════════════════════ */
+const rockG=new THREE.Group();scene.add(rockG);
+// 화성 평면과 같은 회전 (x축 기준)
+rockG.rotation.x = R15 - PI/2;  // plA와 동일
+rockG.position.y = 0;
+
+// 바위 - 경사면 위에 랜덤 배치 (x축 회전 좌표계)
+for(let i=0;i<25;i++){
+  const px=-7+Math.random()*14;  // x 범위
+  const py=-3+Math.random()*10;  // y 범위 (화면상)
+  const s=.12+.3*Math.random();  // 크기
+  
+  const r=new THREE.Mesh(new THREE.IcosahedronGeometry(s,0),
+    new THREE.MeshStandardMaterial({color:0x5a2208,roughness:1}));
+  
+  // z축으로 납작하게 (경사면에 박힌 느낌)
+  r.scale.set(1+s*.2, 1+s*.3, .2+s*.15);
+  
+  // z = 0이 경사면이므로, 바위 높이의 절반 정도만 위로
+  const pz = s * 0.1;  // 경사면에 거의 붙어있게
+  
+  r.position.set(px, py, pz);
+  r.rotation.set(Math.random()*.5, Math.random()*6.28, Math.random()*.5);
+  rockG.add(r);
+}
+
+/* ═══ 경사면 위치 계산 ═══════════════════════════════ */
+// 경사면 위치 계산 함수: z 좌표에 따른 y 높이
+const getSlopeY = (z) => HY - z * Math.tan(R15);
+
+// 착륙선 그룹 (더미 - 코드 호환성 유지용)
+const landerG = new THREE.Group();
+scene.add(landerG);
+landerG.visible = false; // 사용하지 않음
+
+/* ═══ 전력기지 건물 (똑바로 서있음) ════════════════════════════════ */
+const powerStationG=new THREE.Group();scene.add(powerStationG);
+
+stationZ = 0;
+stationBaseY = getSlopeY(stationZ);
+
+// 기지 본체 (직육면체)
+const stationBody=new THREE.Mesh(
+  new THREE.BoxGeometry(1.8,2.2,1.5),
+  new THREE.MeshStandardMaterial({color:0x334455,metalness:.6,roughness:.4})
+);
+stationBody.position.set(HX-2.5, stationBaseY+1.1, stationZ);
+powerStationG.add(stationBody);
+
+// 지붕 (평평한 육각기둥)
+const roofShape = new THREE.CylinderGeometry(1.1,.95,.3,6);
+const roof=new THREE.Mesh(roofShape,
+  new THREE.MeshStandardMaterial({color:0x445566,metalness:.5,roughness:.5})
+);
+roof.position.set(HX-2.5, stationBaseY+2.35, stationZ);
+powerStationG.add(roof);
+
+// 창문들 (꺼진 상태 - 어두운 회색, 나중에 emissive로 켜짐)
+const windowMat = new THREE.MeshStandardMaterial({
+  color:0x112233,
+  emissive:0x000000,
+  emissiveIntensity:0,
+  metalness:.2,
+  roughness:.8
+});
+
+// 앞면 창문 (2x2 배열)
+const windowSize = 0.25;
+const windows = [];
+for(let row=0;row<2;row++){
+  for(let col=0;col<2;col++){
+    const win=new THREE.Mesh(new THREE.BoxGeometry(windowSize,windowSize,0.05),windowMat.clone());
+    win.position.set(
+      HX-2.5-0.4+col*0.5,
+      stationBaseY+0.8+row*0.6,
+      stationZ+0.76
+    );
+    powerStationG.add(win);
+    windows.push(win.material);
+  }
+}
+
+// 측면 창문들
+for(let i=0;i<2;i++){
+  const win=new THREE.Mesh(new THREE.BoxGeometry(0.05,windowSize,windowSize),windowMat.clone());
+  win.position.set(HX-2.5+0.91, stationBaseY+1.2+i*0.5, stationZ);
+  powerStationG.add(win);
+  windows.push(win.material);
+}
+
+// 안테나/송신탑
+const antenna=new THREE.Mesh(
+  new THREE.CylinderGeometry(.05,.05,0.8,8),
+  new THREE.MeshStandardMaterial({color:0x667788,metalness:.7})
+);
+antenna.position.set(HX-2.5, stationBaseY+3.1, stationZ);
+powerStationG.add(antenna);
+
+// 안테나 끝 표시등 (빨간색 - 꺼진 상태)
+const beaconMat = new THREE.MeshStandardMaterial({
+  color:0x440000,
+  emissive:0x000000,
+  emissiveIntensity:0
+});
+const beacon=new THREE.Mesh(new THREE.SphereGeometry(.08,8,8),beaconMat);
+beacon.position.set(HX-2.5, stationBaseY+3.5, stationZ);
+powerStationG.add(beacon);
+
+// 전력 상태 저장 (나중에 불 켤 때 사용)
+powerStationG.userData = {
+  windows: windows,
+  beacon: beaconMat,
+  powered: false
+};
+
+powerStationG.visible=false;
+
+// 기존 로켓 관련 코드 제거 (flameM 등)
+const rocketG=new THREE.Group();scene.add(rocketG);
+rocketG.visible=false;
+
+
+/* ═══ 광선 ════════════════════════════════════════════════ */
+const lgP1=new THREE.Group();scene.add(lgP1);lgP1.visible=false;
+const lgP2=new THREE.Group();scene.add(lgP2);lgP2.visible=false;
+const RAY_P1=V3(0,-1,0);
+const RAY_P2=V3(0,-Math.SQRT1_2,Math.SQRT1_2); // 45° 수평에서
+for(let xi=-2;xi<=2;xi++) for(let zi=-1;zi<=3;zi++){
+  const a=new THREE.ArrowHelper(RAY_P1,V3(xi*1.4,6.5,zi*1.4),2.8,0xffee33,.18,.10);
+  a.userData={x:xi*1.4,z:zi*1.4,ph:Math.random()*4.5};lgP1.add(a);
+}
+[{x:0,z:1.2},{x:1.2,z:1.2},{x:-1.2,z:1.2},{x:0,z:2.4},{x:1.2,z:2.4},
+ {x:-1.2,z:2.4},{x:0,z:3.6},{x:-5,z:2},{x:5,z:2}].forEach(d=>{
+  const a=new THREE.ArrowHelper(RAY_P2,V3(d.x,7.5,d.z),3.0,0xffee33,.22,.12);
+  a.userData={x:d.x,z:d.z,ph:Math.random()*4.5};lgP2.add(a);
+});
+
+/* ═══ 씬 업데이트 ═════════════════════════════════════════ */
+function updScene(t){
+  if(phase===1){
+    const pv=p1PV(t),prv=p1ProjV(t);
+    setQG(panelQG,pv.BL,pv.BR,pv.TR,pv.TL);
+    setEG(panelEG,pv.BL,pv.BR,pv.TR,pv.TL);
+    setQG(projQG,prv.BL,prv.BR,prv.TR,prv.TL);
+    setEG(projEG,prv.BL,prv.BR,prv.TR,prv.TL);
+    shadowM.visible=false;projM.visible=true;
+    const panCen=pv.BL.clone().add(pv.TR).multiplyScalar(.5);
+    lbS.position.copy(panCen).add(V3(.3,.3,0));
+    const prCen=prv.BL.clone().add(prv.TR).multiplyScalar(.5);
+    lbSp.position.copy(prCen).add(V3(0,.25,0));
+    lbSh.visible=false;
+  }else{
+    const pv=p2PV(t),sv=p2ShadV(t);
+    setQG(panelQG,pv.BL,pv.BR,pv.TR,pv.TL);
+    setEG(panelEG,pv.BL,pv.BR,pv.TR,pv.TL);
+    setQG(shadowQG,sv.BL,sv.BR,sv.TR,sv.TL);
+    shadowM.visible=shadowVisible;
+    projM.visible=false;
+    const panCen=pv.BL.clone().add(pv.TR).multiplyScalar(.5);
+    lbS.position.copy(panCen).add(V3(.3,.3,0));
+    const shCen=sv.BL.clone().add(sv.TR).multiplyScalar(.5);
+    lbSh.position.copy(shCen).add(V3(0,.22,0));
+    lbSh.visible=(shadowVisible&&iqStep>=1);
+    if(missionActive)checkMission(Math.round(t/DEG));
+    // 에너지 코어 (착륙선 제거로 사용 안함)
+    // if(missionDone){coreMat.color.set(0x00cc55);coreMat.emissive.set(0x00ff44);coreMat.emissiveIntensity=.9;}
+    // else if(missionActive&&Math.abs(t/DEG-45)<1){coreMat.color.set(0xff8800);coreMat.emissive.set(0xff6600);coreMat.emissiveIntensity=.7;}
+    // else{coreMat.color.set(0x223344);coreMat.emissive.set(0x000000);coreMat.emissiveIntensity=0;}
+  }
+  panelM.material=marsMode?matSolar:matGeo;
+  lbS.visible=!marsMode;lbSp.visible=(phase===1&&!marsMode);
+  updUI(t);draw2D(t);
+}
+function setT(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function updUI(t){
+  const deg=Math.round(t/DEG);
+  document.querySelectorAll('.thsl').forEach(s=>s.value=deg);
+  setT('vt',deg+'°');
+  setT('hudT',deg+'°');
+  setT('vtAngInput',deg+'°');
+  if(phase===1){
+    setT('dsp1',p1Sp(t));
+    setT('cosDisplay',p1Cos(t).toFixed(3));
+    setT('hudSp',p1Sp(t));
+  }else{
+    setT('hudSp',oblSp(t));
+  }
+  if(selOp&&selFn&&selAng)updateSelResult();
+}
+
+/* ═══ 미션 판정 ═══════════════════════════════════════════ */
+function checkMission(deg){
+  if(!missionDone&&Math.abs(deg-45)<=2){
+    missionDone=true;
+    
+    // 완료 배지 표시
+    document.getElementById('m1done').style.display='block';
+    
+    // 힌트 메시지 숨기기
+    document.getElementById('missionHint').style.display='none';
+    
+    // 전력 게이지 업데이트 (18% → 100%)
+    let percent = 18;
+    const powerGauge = setInterval(() => {
+      percent += 5;
+      if(percent <= 100) {
+        document.getElementById('powerLevel').textContent = percent + '%';
+        if(percent >= 75) {
+          document.getElementById('powerLevel').style.color = '#44ff88';
+        }
+      } else {
+        clearInterval(powerGauge);
+        document.getElementById('powerLevel').textContent = '100%';
+      }
+    }, 50);
+    
+    // 전력기지 불 켜기 (자동)
+    setTimeout(() => {
+      activatePowerSystems();
+      
+      // 생명유지장치 가동 버튼 표시
+      setTimeout(() => {
+        document.getElementById('lBtn').style.display='block';
+      }, 1500);
+    }, 800);
+    
+    // 축하 팝업
+    setTimeout(()=>showMWin(),1200);
+  }
+}
+function showMWin(){
+  setT('mwinT','🎉 45° 달성! 전력 복구 성공! ✅');
+  setT('mwinB',`θ=45°: 빛과 패널이 수직!\n정사영 면적 최대화 달성!\n\n⚡ 전력기지 가동 중...`);
+  document.getElementById('mwin').style.display='flex';
+  document.getElementById('mwinOk').onclick=()=>{
+    document.getElementById('mwin').style.display='none';
+  };
+}
+
+/* ═══ 전력 복구 ════════════════════════════════════════════ */
+window.triggerLaunch=function(){
+  if(launchDone)return;launchDone=true;
+  const ov=document.getElementById('launchOv');ov.style.display='flex';
+  
+  // 1단계: 전력 충전 (3초)
+  setT('lTitle','⚡ 생명유지장치 전력 충전 중...');
+  document.getElementById('lCnt').style.display='none';
+  document.getElementById('energyBar').style.width='18%';
+  document.getElementById('energyPercent').textContent='18%';
+  
+  // 좌측 패널 전력 게이지도 동시에 업데이트
+  let percent = 18;
+  const chargeInterval = setInterval(()=>{
+    percent += 3;
+    if(percent <= 100){
+      document.getElementById('energyBar').style.width=percent+'%';
+      document.getElementById('energyPercent').textContent=percent+'%';
+      document.getElementById('powerLevel').textContent=percent+'%';
+      
+      // 전력이 75% 이상이 되면 색상 변경
+      if(percent >= 75){
+        document.getElementById('powerLevel').style.color='#44ff88';
+      }
+    }
+  },80);
+  
+  setTimeout(()=>{
+    clearInterval(chargeInterval);
+    document.getElementById('energyBar').style.width='100%';
+    document.getElementById('energyPercent').textContent='100% 충전 완료!';
+    document.getElementById('powerLevel').textContent='100%';
+    document.getElementById('powerLevel').style.color='#44ff88';
+    
+    // 2단계: 시스템 가동 (2초)
+    setTimeout(()=>{
+      setT('lTitle','🔋 생명유지장치 가동 중...');
+      document.getElementById('lCnt').style.display='block';
+      document.getElementById('lCnt').textContent='시스템 점검 중...';
+      
+      // 3단계: 전력기지 불 켜기 애니메이션
+      setTimeout(()=>{
+        document.getElementById('lCnt').textContent='✅ 모든 시스템 정상 가동!';
+        document.getElementById('lCnt').style.color='#44ff88';
+        
+        // 착륙선에 불 켜지는 효과 (Three.js 오브젝트 조명 강화)
+        activatePowerSystems();
+        
+        setTimeout(()=>{
+          setT('lBody','⚡ 생명유지장치 복구 완료! 🎉\n\n정사영 공식 S\'=S×cos60° 로\n최적 패널 각도 45° 발견!\n전력기지 모든 시스템 정상 가동!');
+          document.getElementById('lOkBtn').style.display='block';
+        },1500);
+      },1500);
+    },2000);
+  },2500);
+};
+document.getElementById('lOkBtn').addEventListener('click',()=>{
+  document.getElementById('launchOv').style.display='none';
+  setTimeout(openAI,600);
+});
+
+// 전력기지 불 켜기 함수 - 창문과 안테나 표시등 점등
+function activatePowerSystems(){
+  if(powerStationG.userData.powered) return; // 이미 켜져있으면 무시
+  powerStationG.userData.powered = true;
+  
+  // 전력기지 창문 불 켜기 (점진적으로)
+  const windows = powerStationG.userData.windows;
+  let delay = 0;
+  windows.forEach((winMat, idx) => {
+    setTimeout(() => {
+      winMat.emissive = new THREE.Color(0x44ffaa);
+      winMat.emissiveIntensity = 0.8;
+      winMat.color = new THREE.Color(0x88ffcc);
+    }, delay);
+    delay += 100; // 100ms씩 간격을 두고 켜짐
+  });
+  
+  // 안테나 표시등 깜빡임 (빨간색 → 초록색)
+  setTimeout(() => {
+    const beacon = powerStationG.userData.beacon;
+    beacon.color = new THREE.Color(0x00ff44);
+    beacon.emissive = new THREE.Color(0x00ff44);
+    beacon.emissiveIntensity = 1.0;
+    
+    // 깜빡임 효과
+    let blinkCount = 0;
+    const blinkInterval = setInterval(() => {
+      beacon.emissiveIntensity = beacon.emissiveIntensity > 0.5 ? 0.3 : 1.0;
+      blinkCount++;
+      if(blinkCount > 8) {
+        clearInterval(blinkInterval);
+        beacon.emissiveIntensity = 1.0;
+      }
+    }, 300);
+  }, 500);
+  
+  // 전력기지 주변 포인트 라이트 추가
+  const powerLight = new THREE.PointLight(0x44ff88, 4, 25);
+  powerLight.position.set(HX-2.5, stationBaseY+2.0, stationZ);
+  scene.add(powerLight);
+  
+  // 조명 서서히 밝아지기
+  let intensity = 0;
+  const lightUpInterval = setInterval(() => {
+    intensity += 0.3;
+    powerLight.intensity = Math.min(intensity, 4);
+    if(intensity >= 4){
+      clearInterval(lightUpInterval);
+    }
+  }, 100);
+}
+
+function animLaunch(){
+  // 더 이상 로켓 발사 애니메이션 불필요
+  return;
+}
+
+/* ═══ AI ══════════════════════════════════════════════════ */
+const AI_TEXT=`에너지 설계자님, 완벽합니다! ⚡
+
+생명유지장치 전력 복구 성공!
+
+이번 탐구에서 발견한 것:
+
+개념탐구 (수직광):
+• θ=0°→90°로 올릴수록: 먼저 커지다가 줄어요!
+• S'/S = cosθ (정사영 공식!)
+
+미션탐구 (경사면+비스듬한 태양):
+• 패널을 세울수록 그림자가 커짐! (예상과 달랐나요?)
+• θ=45°에서 그림자 최대 → 빛과 패널이 수직!
+
+핵심 발견:
+빛과 수직이 되는 각도(θ=45°)에서
+정사영 넓이 최대화 → 에너지 흡수 최대!
+
+이것이 바로 정사영의 본질:
+'어느 면이 빛과 정면으로 마주하느냐'에 따라
+S' = S × cosθ (θ: 이면각) 가 결정됩니다.
+
+당신은 이 공식으로 생명유지장치를 구했습니다!
+
+이 공식을 한 문장으로 일반화해 주세요.`;
+function openAI(){
+  document.getElementById('aibox').style.display='flex';
+  typeEffect(document.getElementById('aiText'),AI_TEXT,16);
+}
+function typeEffect(el,txt,spd){
+  el.innerHTML='<span class="ai-cur"></span>';let i=0;
+  const iv=setInterval(()=>{
+    if(i<txt.length)el.innerHTML=txt.slice(0,++i)+'<span class="ai-cur"></span>';
+    else{clearInterval(iv);el.innerHTML=txt;}
+  },spd);
+}
+document.getElementById('aiSub').addEventListener('click',()=>{
+  if(!document.getElementById('aiInput').value.trim()){alert('문장을 작성해주세요!');return;}
+  document.getElementById('aibox').style.display='none';
+  alert('✅ 에너지 규정이 제출됐습니다!\n\n훌륭한 수학적 발견이에요!');
+});
+
+/* ═══ 2D TOP VIEW ══════════════════════════════════════════ */
+function drawTop(t){
+  const c=document.getElementById('tc');if(!c.width||!c.height)return;
+  const ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0b1422';ctx.fillRect(0,0,W,H);
+  const sc=Math.min(W,H)*.044,ox=W/2,oy=H/2+4;
+  if(phase===1){
+    const pv=p1PV(t),prv=p1ProjV(t);
+    const to2d=P=>({x:ox+P.x*sc,y:oy-P.z*sc});
+    const pp=[to2d(pv.BL),to2d(pv.BR),to2d(pv.TR),to2d(pv.TL)];
+    const sp=[to2d(prv.BL),to2d(prv.BR),to2d(prv.TR),to2d(prv.TL)];
+    ctx.fillStyle='rgba(120,0,220,.72)';
+    ctx.beginPath();ctx.moveTo(sp[0].x,sp[0].y);for(let i=1;i<4;i++)ctx.lineTo(sp[i].x,sp[i].y);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#ee88ff';ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle='#4499ff';ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);for(let i=1;i<4;i++)ctx.lineTo(pp[i].x,pp[i].y);ctx.closePath();ctx.stroke();
+    const h1=to2d(V3(-PW2,0,0)),h2=to2d(V3(PW2,0,0));
+    ctx.strokeStyle='#ffdd44';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(h1.x,h1.y);ctx.lineTo(h2.x,h2.y);ctx.stroke();
+    ctx.fillStyle='#cc66ff';ctx.font='bold 10px Courier New';ctx.fillText("■ S'",4,H-12);
+    ctx.fillStyle='#4499ff';ctx.fillText('□ S',4,H-2);
+  }else{
+    const pv=p2PV(t),sv=p2ShadV(t);
+    const to2d=P=>({x:ox+P.x*sc,y:oy-P.z*sc});
+    const pp=[to2d(pv.BL),to2d(pv.BR),to2d(pv.TR),to2d(pv.TL)];
+    if(shadowVisible || iqStep>=2){
+      const sp=[to2d(sv.BL),to2d(sv.BR),to2d(sv.TR),to2d(sv.TL)];
+      ctx.fillStyle='rgba(255,160,0,.55)';
+      ctx.beginPath();ctx.moveTo(sp[0].x,sp[0].y);for(let i=1;i<4;i++)ctx.lineTo(sp[i].x,sp[i].y);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#ffcc44';ctx.lineWidth=2;ctx.stroke();
+    }
+    ctx.strokeStyle='#4499ff';ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.moveTo(pp[0].x,pp[0].y);for(let i=1;i<4;i++)ctx.lineTo(pp[i].x,pp[i].y);ctx.closePath();ctx.stroke();
+    const h1=to2d(V3(HX-PW2,HY,HZ)),h2=to2d(V3(HX+PW2,HY,HZ));
+    ctx.strokeStyle='#ffdd44';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(h1.x,h1.y);ctx.lineTo(h2.x,h2.y);ctx.stroke();
+    if(shadowVisible || iqStep>=2){ctx.fillStyle='#ffaa44';ctx.font='bold 10px Courier New';ctx.fillText("■ 그림자",4,H-12);}
+    ctx.fillStyle='#4499ff';ctx.fillText('□ S',4,H-2);
+  }
+}
+
+/* ═══ 2D SIDE VIEW (완전 재설계) ══════════════════════════ */
+function drawSide(t){
+  const c=document.getElementById('sc');if(!c.width||!c.height)return;
+  const ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#08101e';ctx.fillRect(0,0,W,H);
+  if(phase===1)drawSideP1(ctx,W,H,t);
+  else drawSideP2(ctx,W,H,t);
+}
+
+function drawSideP1(ctx,W,H,t){
+  const mg=14,sc=Math.min(W-2*mg,H-2*mg)*.30;
+  const ox=mg+(W-2*mg)*.25,oy=mg+(H-2*mg)*.78;
+  const wc=(wy,wz)=>({x:ox+wz*sc,y:oy-wy*sc});
+  ctx.strokeStyle='#446688';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(mg,oy);ctx.lineTo(W-mg,oy);ctx.stroke();
+  ctx.fillStyle='#8899aa';ctx.font='bold 12px Courier New';ctx.fillText('α',W-mg-16,oy-5);
+  // 수직 광선
+  ctx.strokeStyle='rgba(255,220,50,.5)';ctx.lineWidth=1.6;ctx.setLineDash([5,4]);
+  const pZ=PH*Math.cos(t);
+  for(let k=-.3;k<=pZ+.2;k+=.8){
+    const cx=ox+k*sc;ctx.beginPath();ctx.moveTo(cx,mg);ctx.lineTo(cx,oy);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,220,50,.8)';
+  for(let k=.4;k<=pZ+.1;k+=.8){
+    const cx=ox+k*sc;ctx.beginPath();ctx.moveTo(cx,oy-10);ctx.lineTo(cx-4,oy-20);ctx.lineTo(cx+4,oy-20);ctx.closePath();ctx.fill();
+  }
+  const maxSZ=W-mg-ox;
+  const shW=Math.min(pZ*sc,maxSZ);
+  ctx.strokeStyle='#cc44ff';ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+shW,oy);ctx.stroke();
+  if(shW>.06){ctx.fillStyle='#cc44ff';ctx.font='bold 12px Courier New';ctx.fillText("S'",ox+shW/2-8,oy+16);}
+  const hc=wc(0,0),pe=wc(PH*Math.sin(t),Math.min(PH*Math.cos(t),maxSZ/sc));
+  ctx.strokeStyle='#4499ff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(hc.x,hc.y);ctx.lineTo(pe.x,pe.y);ctx.stroke();
+  ctx.fillStyle='#ffdd44';ctx.beginPath();ctx.arc(hc.x,hc.y,6,0,2*PI);ctx.fill();
+  if(t>.01){
+    const arcR=46;
+    ctx.strokeStyle='rgba(255,255,200,.9)';ctx.lineWidth=2.2;
+    ctx.beginPath();ctx.arc(hc.x,hc.y,arcR,-t,0,false);ctx.stroke();
+    const mA=-t/2,lr=arcR+15;
+    ctx.fillStyle='#fff';ctx.font='bold 13px Courier New';
+    ctx.fillText('θ',hc.x+lr*Math.cos(mA)-4,hc.y+lr*Math.sin(mA)+5);
+    ctx.fillStyle='#ccdeff';ctx.font='bold 11px Courier New';
+    ctx.fillText(Math.round(t/DEG)+'°',hc.x+lr*Math.cos(mA)+9,hc.y+lr*Math.sin(mA)+5);
+  }
+  ctx.fillStyle='#4499ff';ctx.font='bold 12px Courier New';ctx.fillText('S',pe.x+4,pe.y);
+  ctx.fillStyle='#ffcc44';ctx.font='bold 13px Courier New';ctx.fillText(`cosθ=${p1Cos(t).toFixed(3)}`,mg,mg+14);
+  ctx.fillStyle='#cc77ff';ctx.font='bold 12px Courier New';ctx.fillText(`S'/S=${p1Cos(t).toFixed(3)}`,mg,mg+28);
+}
+
+function drawSideP2(ctx,W,H,t){
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#08101e';ctx.fillRect(0,0,W,H);
+
+  // ── 레이아웃: 힌지를 중앙 약간 왼쪽, 수직 60% ──
+  const sc=Math.min(W,H)*.165;  // 작은 스케일 (클리핑 방지)
+  const ox=W*.32;                // 힌지 x (왼쪽 1/3)
+  const oy=H*.58;                // 힌지 y
+  const panelLen = PH * sc * 0.58; // 패널 표시 길이 (θ=135°까지 캔버스 내 유지)
+
+  // ── 수평면 기준선 (패널 초기 누운 위치 = 수평) ──
+  ctx.strokeStyle='#2a4466';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(8,oy);ctx.lineTo(W-8,oy);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#5577aa';ctx.font='10px Courier New';ctx.fillText('수평',W-36,oy-3);
+
+  // ── 경사면 α (-15°, 힌지 기준 오른쪽으로 내려감) ──
+  const s15=Math.sin(15*DEG),c15=Math.cos(15*DEG);
+  // EV방향(α 아래방향): canvas에서 (c15, s15) → 오른쪽-아래
+  const ev = [c15, s15];  // 경사면 방향 벡터 (정규화)
+  // 힌지에서 좌우로 α 연장
+  const aLen=Math.min(ox-10, W-ox-10); // 양방향 최대 길이
+  const ax1=ox-aLen,ay1=oy-aLen*s15/c15; // 왼쪽 끝 (위)
+  const ax2=ox+aLen,ay2=oy+aLen*s15/c15; // 오른쪽 끝 (아래)
+  // 캔버스 범위 클램프
+  const clampedAx2=Math.min(ax2,W-8),clampedAy2=oy+(clampedAx2-ox)*s15/c15;
+  ctx.strokeStyle='#cc7722';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(Math.max(ax1,8),Math.max(ay1,8));
+  ctx.lineTo(clampedAx2,clampedAy2);ctx.stroke();
+  // α 레이블
+  const lblAx=Math.min(clampedAx2-2,W-22),lblAy=Math.min(clampedAy2+14,H-5);
+  ctx.fillStyle='#cc7722';ctx.font='bold 13px Courier New';ctx.fillText('α',lblAx,lblAy);
+
+  // -15° 호 (수평↔α)
+  ctx.strokeStyle='rgba(200,120,30,.75)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(ox,oy,22,0,15*DEG,false);ctx.stroke();
+  ctx.fillStyle='#cc9944';ctx.font='9.5px Courier New';ctx.fillText('-15°',ox+25,oy+8);
+
+  // ── 태양 광선 (수평 기준 45° 위에서, 왼쪽 위 → 오른쪽 아래) ──
+  // canvas 좌표: 오른쪽 +x, 아래 +y
+  // 광선이 왼쪽 위에서 오른쪽 아래로 내려옴
+  const rdx=Math.cos(45*DEG),rdy=Math.sin(45*DEG);  // 오른쪽-아래 방향
+  ctx.strokeStyle='rgba(255,220,50,.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+  // 패널 근처에만 3개 광선 그리기
+  for(let k=-1;k<=1;k++){
+    const startX=ox-1.5*sc+k*1.0*sc;
+    const startY=oy-2.5*sc+k*0.5*sc;
+    const endX=startX+rdx*3.5*sc,endY=startY+rdy*3.5*sc;
+    if(startX<4||endX>W-4)continue;
+    ctx.beginPath();ctx.moveTo(startX,startY);ctx.lineTo(endX,endY);ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  // 광선 화살표 머리 (각 광선 끝에)
+  ctx.fillStyle='rgba(255,220,50,.82)';
+  for(let k=-1;k<=1;k++){
+    const ex=ox-1.5*sc+k*1.0*sc+rdx*3.5*sc;
+    const ey=oy-2.5*sc+k*0.5*sc+rdy*3.5*sc;
+    if(ex<6||ex>W-6||ey<6||ey>H-20)continue;
+    const nx=-rdy,ny=rdx;
+    ctx.beginPath();ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-rdx*10+nx*4,ey-rdy*10+ny*4);
+    ctx.lineTo(ex-rdx*10-nx*4,ey-rdy*10-ny*4);ctx.closePath();ctx.fill();
+  }
+  // 태양 고도 레이블
+  
+  ctx.fillStyle='#ffee44';ctx.font='bold 14px Courier New';
+  ctx.fillText('Side View',8,20);
+  ctx.fillText('빛과 화성면이 이루는 각:30°',8,48);
+
+  // ── 패널 방향 계산 (수평에서 시작) ──
+  // canvas 좌표계: 오른쪽 +x, 아래 +y
+  // θ=0: 수평 (오른쪽)
+  // θ=90°: 수직 (위)
+  const horizontal = [1, 0];   // 수평 방향
+  const vertical = [0, -1];    // 수직 방향 (위)
+  
+  const pd = [
+    Math.cos(t) * horizontal[0] + Math.sin(t) * vertical[0],
+    Math.cos(t) * horizontal[1] + Math.sin(t) * vertical[1]
+  ];
+  
+  const panTipX=ox+pd[0]*panelLen;
+  const panTipY=oy+pd[1]*panelLen;
+  // 클램프 (캔버스 범위 내)
+  const ptx=Math.max(8,Math.min(W-10,panTipX));
+  const pty=Math.max(8,Math.min(H-24,panTipY));
+
+  // ── 패널 ──
+  ctx.strokeStyle='#4499ff';ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ptx,pty);ctx.stroke();
+  ctx.fillStyle='#ffdd44';ctx.beginPath();ctx.arc(ox,oy,7,0,2*PI);ctx.fill();
+  ctx.fillStyle='#4499ff';ctx.font='bold 13px Courier New';
+  ctx.fillText('S',Math.min(ptx+5,W-20),Math.max(pty,14));
+
+  // ── θ 호 (수평 ↔ 패널) ──
+  if(t>.01){
+    const arcR=44;
+    const horizA = 0;                      // 수평 = 0°
+    const pdA = Math.atan2(pd[1], pd[0]);  // 패널 각도
+    ctx.strokeStyle='rgba(140,190,255,.92)';ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.arc(ox,oy,arcR,pdA,horizA,false);
+    ctx.stroke();
+    const mA=(horizA+pdA)/2,lr=arcR+16;
+    const lx=ox+lr*Math.cos(mA),ly=oy+lr*Math.sin(mA);
+    if(lx>6&&lx<W-6&&ly>6&&ly<H-6){
+      ctx.fillStyle='#ccdeff';ctx.font='bold 13px Courier New';
+      ctx.fillText('θ='+Math.round(t/DEG)+'°',lx-16,ly+4);
+    }
+  }
+
+  // ── 그림자 (α 위에 사선 투영, 오른쪽-아래 방향) ──
+  if(shadowVisible){
+    // oblR(t): 실제 경사면 투영 비율 (θ=45°에서 ≈2.0 → S'=200)
+    const shRatio = oblR(t);
+    const shLenPx = shRatio * (panelLen/0.58); // 그림자 시각 길이 (PH*sc 기준)
+    const shEx=ox+ev[0]*shLenPx, shEy=oy+ev[1]*shLenPx;
+    const shExC=Math.min(shEx,W-8), shEyC=oy+ev[1]*(shExC-ox)/ev[0];
+    if(shLenPx>4){
+      ctx.strokeStyle='rgba(255,160,0,.92)';ctx.lineWidth=5;
+      ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(shExC,shEyC);ctx.stroke();
+      ctx.strokeStyle='rgba(255,220,50,.45)';ctx.lineWidth=1.5;ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(ptx,pty);ctx.lineTo(shExC,shEyC);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // 그림자 넓이 표시 — oblSp 기준으로 Top View·HUD와 동일한 값
+    const sv = oblSp(t);
+    ctx.fillStyle='#ffcc44';ctx.font='bold 14px Courier New';
+    ctx.textAlign='center';
+    ctx.fillText('그림자 넓이: '+sv, W/2, H-26);
+    ctx.textAlign='left';
+    // θ=45° 수직 강조 표시
+    if(Math.abs(t-45*DEG)<5*DEG){
+      ctx.fillStyle='rgba(0,255,100,.85)';ctx.font='bold 11px Courier New';
+      ctx.textAlign='center';
+      ctx.fillText('⊥ 빛과 수직! (최대!)', W/2, H-10);
+      ctx.textAlign='left';
+    }
+  }
+}
+function draw2D(t){drawTop(t);drawSide(t);}
+
+/* ═══ 모드 & 페이즈 ═══════════════════════════════════════ */
+function setMode(mars){
+  marsMode=mars;
+  const bgC=phase===1?(mars?0x0a1a2a:0x04091a):(mars?0x0d0100:0x04091a);
+  scene.background=new THREE.Color(bgC);scene.fog=new THREE.FogExp2(bgC,.018);
+  gnd2.material.opacity=mars?1:.06;gnd2.material.transparent=!mars;gnd2.material.needsUpdate=true;
+  panelM.material=mars?matSolar:matGeo;
+  document.getElementById('bM').className='hb'+(mars?' on':'');
+  document.getElementById('bG').className='hb'+(!mars?' on':'');
+  updScene(theta);
+}
+function setPhase(p){
+  const ep=(p===4)?2:p;phase=ep;
+  gnd1.visible=(ep===1);grid1.visible=(ep===1);hinge1.visible=(ep===1);
+  gnd2.visible=(ep===2);gndH.visible=(ep===2);hinge2.visible=(ep===2);
+  rockG.visible=(ep===2);landerG.visible=false;
+  powerStationG.visible=false; // Phase 전환 시 전력기지 숨김 (acceptBtn에서 다시 보임)
+  document.getElementById('lp3inner').style.display=(ep===3)?'flex':'none';
+  document.getElementById('lps').style.display=(ep===3)?'none':'flex';
+  document.getElementById('lp').style.background=(ep===3)?'#160000':'#0d1630';
+  document.getElementById('ph3ov').style.display=(ep===3)?'flex':'none';
+  document.getElementById('p1content').style.display=(ep===1)?'block':'none';
+  const p2El=document.getElementById('p2content');
+  p2El.style.display=(ep===2)?'flex':'none';
+  if(ep===2)p2El.style.flexDirection='column';
+  document.getElementById('tab1').className='tab'+(ep===1?' on':'');
+  document.getElementById('tab2').className='tab'+(ep!==1?' on':'');
+  const sl = document.getElementById('sl');
+if (ep === 2) {
+    sl.max = 165; // 미션 단계에서는 165도까지
+} else {
+    sl.max = 90;  // 탐구 단계에서는 90도까지
+}
+  CAM=ep===1?{th:.80,ph:.58,r:12}:{th:.80,ph:.62,r:16};
+  const bgC=ep===1?0x0a1a2a:(marsMode?0x0d0100:0x04091a);
+  scene.background=new THREE.Color(bgC);scene.fog=new THREE.FogExp2(bgC,.018);
+  theta=0;sl.value=0;
+  if(p===4){
+    shadowVisible=true;iqStep=4;missionActive=true;missionDone=false;
+    launchDone=false;launchAnim=0;launchAnimating=false;
+    document.getElementById('lBtn').style.display='none';
+    document.getElementById('m1done').style.display='none';
+    document.getElementById('missionArea').style.display='flex';
+    document.getElementById('missionArea').style.flexDirection='column';
+    powerStationG.visible=false;
+    // 전력기지 불 끄기 (초기화)
+    if(powerStationG.userData.windows){
+      powerStationG.userData.windows.forEach(winMat => {
+        winMat.emissive = new THREE.Color(0x000000);
+        winMat.emissiveIntensity = 0;
+        winMat.color = new THREE.Color(0x112233);
+      });
+      powerStationG.userData.beacon.emissive = new THREE.Color(0x000000);
+      powerStationG.userData.beacon.emissiveIntensity = 0;
+      powerStationG.userData.beacon.color = new THREE.Color(0x440000);
+      powerStationG.userData.powered = false;
+    }
+    // coreMat.color.set(0x223344);coreMat.emissive.set(0x000000);coreMat.emissiveIntensity=0;
+    document.getElementById('ph3ov').style.display='none';
+    document.getElementById('tab2').className='tab on';
+  }
+  updScene(theta);
+}
+
+/* ═══ 탐구 단계 이벤트 ════════════════════════════════════ */
+// Step 1: 예상 선택 (초기 or 재답)
+let step1Mode = 'initial'; // 'initial' | 'retry'
+let finalAns = null;
+
+document.querySelectorAll('.pbtn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('picked'));
+    this.classList.add('picked');
+    predAns=this.dataset.ans;
+    const msg=document.getElementById('pred-msg');
+    msg.style.display='block';
+
+    if(step1Mode === 'initial'){
+      // 처음 답하기: 피드백 후 '태양은 어디에?' 버튼
+      const isOk=(predAns==='both');
+      msg.textContent=isOk?'👍 좋은 예상이에요! 이제 직접 확인해보세요.':'정말 그런지 아래 버튼을 눌러, 빛의 방향을 고려해 볼까요?';
+      document.getElementById('iq0btn').style.display='block';
+      document.getElementById('finalAnswerCheck').style.display='none';
+      document.getElementById('shadowDescMsg').style.display='none';
+      document.getElementById('iq1btn').style.display='none';
+    } else {
+      // 다시 답하기: '최종답 확인' 버튼으로 전환
+      finalAns = predAns;
+      const isOk=(predAns==='both');
+      msg.textContent=isOk?'👍 좋은 예상이에요! 최종답을 확인해보세요.':'이게 맞을까요? 최종답 확인 버튼을 눌러보세요.';
+      document.getElementById('iq0btn').style.display='none';
+      document.getElementById('finalAnswerCheck').style.display='block';
+      document.getElementById('shadowDescMsg').style.display='none';
+      document.getElementById('iq1btn').style.display='none';
+    }
+  });
+});
+
+document.getElementById('iq0btn').addEventListener('click',()=>{
+  // 광선 켜기
+  const bL=document.getElementById('bL');
+  if(!bL.classList.contains('on')){
+    lightOn=true;
+    lgP1.visible=(phase===1);
+    lgP2.visible=(phase===2);
+    bL.classList.add('on');
+  }
+  bL.disabled=false;bL.style.opacity='1';bL.style.cursor='pointer';
+
+  // Step1→Step2 이동 (그림자 숨김 상태로)
+  shadowVisible=false;
+  iqStep=1;
+  document.getElementById('iq0').classList.remove('active');
+  document.getElementById('iq1').classList.add('show','active');
+  document.getElementById('shadowShowBtn').style.display='block';
+  document.getElementById('backToStep1Btn').style.display='none';
+  updScene(theta);
+});
+
+// Step 2: 그림자 보기 버튼
+document.getElementById('shadowShowBtn').addEventListener('click',()=>{
+  shadowVisible = true;
+  updScene(theta);
+  document.getElementById('shadowShowBtn').style.display='none';
+  document.getElementById('backToStep1Btn').style.display='block';
+});
+
+// Step 2: Step 1로 돌아가기 → Step1 선택 초기화, retry 모드로
+document.getElementById('backToStep1Btn').addEventListener('click',()=>{
+  step1Mode = 'retry';
+  finalAns = null;
+  // Step1 UI 초기화
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('picked'));
+  document.getElementById('pred-msg').style.display='none';
+  document.getElementById('iq0btn').style.display='none';
+  document.getElementById('finalAnswerCheck').style.display='none';
+  document.getElementById('shadowDescMsg').style.display='none';
+  document.getElementById('iq1btn').style.display='none';
+  // Step2 숨기고 Step1로 이동
+  document.getElementById('iq1').classList.remove('active');
+  document.getElementById('iq0').classList.add('active');
+  iqStep=0;
+});
+
+// 최종답 확인
+document.getElementById('finalAnswerCheck').addEventListener('click',()=>{
+  const msg = document.getElementById('shadowDescMsg');
+  msg.style.display = 'block';
+
+  if(finalAns === 'both'){
+    msg.textContent = '✅ 정답입니다! θ가 커질수록 그림자가 먼저 커졌다가 작아져요!\n(패널보다 더 커지는 순간이 있어요! Side View에서 확인!)';
+    msg.style.background = '#0a2015';
+    msg.style.color = '#55ff88';
+    msg.style.border = '1px solid #22aa44';
+    document.getElementById('iq1btn').style.display='block';
+  } else {
+    msg.textContent = '❌ 아쉽네요. 정답은 "③ 커졌다 작아진다" 입니다.\nθ가 커질수록 그림자가 먼저 커졌다가 작아져요!';
+    msg.style.background = '#200a0a';
+    msg.style.color = '#ff8888';
+    msg.style.border = '1px solid #aa2222';
+    setTimeout(()=>{
+      document.getElementById('iq1btn').style.display='block';
+    }, 1500);
+  }
+  document.getElementById('finalAnswerCheck').style.display='none';
+});
+
+// Step 1 → Step 3
+document.getElementById('iq1btn').addEventListener('click',()=>{
+  shadowVisible=true;
+  iqStep=3;
+  document.getElementById('sl').max=165;
+  document.getElementById('iq0').classList.remove('active');
+  document.getElementById('iq1').classList.remove('show','active');
+  document.getElementById('iq2').classList.add('show','active');
+  updScene(theta);
+});
+// Step 3: angInput 슬라이더 변경 시 화면 업데이트
+document.getElementById('angInput').addEventListener('input',function(){
+  const val=parseInt(this.value);
+  theta=val*DEG;
+  document.getElementById('sl').value=val;
+  document.getElementById('vtAngInput').textContent=val+'°';
+  updScene(theta);
+});
+// Step 3: 에너지 효율 최대 각도 확인
+document.getElementById('angCheck').addEventListener('click',()=>{
+  const val=parseInt(document.getElementById('angInput').value);
+  const msg=document.getElementById('angMsg');
+  msg.style.display='block';
+  
+  if(Math.abs(val-45)<1){
+    msg.style.cssText='background:#0a2015;color:#55ff88;border:1px solid #22aa44;border-radius:6px;padding:7px;font-size:12.5px;margin-top:7px';
+    msg.textContent=`✅ 정답! θ=${val}°에서 에너지 효율 최대!\n\nSide View에서 확인해보세요!`;
+    theta=45*DEG;
+    document.querySelectorAll('.thsl').forEach(s=>s.value=45);
+    updScene(theta);
+    setTimeout(()=>{
+      iqStep=4;
+      document.getElementById('iq2').classList.remove('active');
+      document.getElementById('iq3').classList.add('show','active');
+      document.getElementById('iq3').scrollIntoView({behavior:'smooth',block:'start'});
+    },1200);
+  }else{
+    msg.style.cssText='background:#200a0a;color:#ff8888;border:1px solid #aa2222;border-radius:6px;padding:7px;font-size:12.5px;margin-top:7px';
+    const hint=val<45?'💡 더 올려보세요!':val<=90?'💡 너무 세웠어요!':'💡 패널이 뒤로 넘어갔어요.';
+    msg.textContent=`θ=${val}°는 최대가 아니에요.\n${hint}`;
+  }
+});
+// Step 4 → Step 5
+document.getElementById('iq3btn').addEventListener('click',()=>{
+  iqStep=5;
+  document.getElementById('iq3').classList.remove('active');
+  document.getElementById('iq4').classList.add('show','active');
+  // iq4로 스크롤
+  document.getElementById('iq4').scrollIntoView({behavior:'smooth',block:'start'});
+});
+// 선택자 버튼
+document.querySelectorAll('.sel-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const g=this.dataset.g,v=this.dataset.v;
+    document.querySelectorAll(`.sel-btn[data-g="${g}"]`).forEach(b=>b.classList.remove('chosen'));
+    this.classList.add('chosen');
+    if(g==='op')selOp=v;else if(g==='fn')selFn=v;else if(g==='ang')selAng=v;
+    updateSelResult();
+  });
+});
+function updateSelResult(){
+  if(!selOp||!selFn||!selAng){setT('selResult',"S' = S × ? = ?");return;}
+  const ar=parseInt(selAng)*DEG;
+  const tv=selFn==='cos'?Math.cos(ar):Math.sin(ar);
+  const res=selOp==='mul'?S_AREA*tv:S_AREA/tv;
+  const op=selOp==='mul'?'×':'÷';
+  document.getElementById('selResult').textContent=`S' = 100 ${op} ${selFn}(${selAng}°) = ${res.toFixed(1)}`;
+  document.getElementById('selResult').style.color=Math.abs(res-70.7)<1?'#44ff88':'#ffcc44';
+}
+document.getElementById('selCheck').addEventListener('click',()=>{
+  const msg=document.getElementById('selMsg');msg.style.display='block';
+  if(!selOp||!selFn||!selAng){msg.className='qmsg qno';msg.textContent='모든 항목을 선택하세요!';return;}
+  const ar=parseInt(selAng)*DEG;
+  const tv=selFn==='cos'?Math.cos(ar):Math.sin(ar);
+  const res=selOp==='mul'?S_AREA*tv:S_AREA/tv;
+  
+  // 정답: ÷ cos 60°
+  if(selOp==='div'&&selFn==='cos'&&selAng==='60'){
+    msg.className='qmsg qok';
+    msg.textContent='✅ 정답! S\'=S÷cos(60°)=200\n\n💡 수평 기준 패널 45° + 경사면 15° = 60°\n→ 경사면과 패널 사이 각도 60°\n\nS\'/S = 1/cos(경사면과 패널 각도)\n→ 패널보다 그림자가 2배 커요!';
+    setTimeout(()=>{
+      // 패널을 0°(수평)로 리셋
+      theta = 0;
+      document.getElementById('sl').value = 0;
+      updScene(theta);
+      
+      // 미션 영역 표시
+      document.getElementById('iq4').classList.remove('active');
+      document.getElementById('missionArea').style.display='flex';
+      document.getElementById('missionArea').style.flexDirection='column';
+      missionActive=true;
+      
+      // 안내 메시지
+      setTimeout(()=>{
+        const hint = document.getElementById('missionHint');
+        hint.style.animation = 'pulse 1.5s ease-in-out 3';
+      }, 500);
+    },700);
+  }else if(selOp==='div'&&selFn==='cos'&&selAng==='45'){
+    msg.className='qmsg qno';
+    msg.textContent='아쉬워요! ÷ cos는 맞지만...\n각도를 다시 생각해보세요!\n💡 힌트: 45° + 15° = ?°';
+  }else if(selOp==='div'&&selFn==='cos'&&selAng==='30'){
+    msg.className='qmsg qno';
+    msg.textContent='÷ cos는 맞지만 각도가 달라요!\n💡 힌트: 패널 45° + 경사 15° = ?°';
+  }else if(selOp==='mul'){
+    msg.className='qmsg qno';
+    msg.textContent='곱하기(×)가 아니라 나누기(÷)예요!\n그림자가 패널보다 크니까요!';
+  }else if(selFn==='sin'){
+    msg.className='qmsg qno';
+    msg.textContent='sin이 아니라 cos를 사용해야 해요!\n빛과 패널 사이 각도에는 cos!';
+  }else{
+    msg.className='qmsg qno';
+    msg.textContent=`다시 생각해보세요!\n💡 힌트: ÷, cos, 60°`;
+  }
+});
+
+/* ═══ Phase 1 객관식 ══════════════════════════════════════ */
+const hintMap={sin:'❌ θ=0°일 때 S\'=100인데\nsin0°=0이라 맞지 않아요!',
+  tan:'❌ θ=90°일 때 S\'=0이어야\n하는데 tan90°=∞이에요!',
+  inv:'❌ θ가 커질수록 S\'이 감소해야\n하는데 1/cosθ는 증가해요!'};
+document.querySelectorAll('.qbtn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const val=this.dataset.val;
+    document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('correct','wrong'));
+    const msg=document.getElementById('qmsg');msg.style.display='block';
+    if(val==='cos'){
+      this.classList.add('correct');msg.className='qmsg qok';
+      msg.textContent='✅ 정답! S\' = S × cosθ\n패널-지면 이면각이 θ일 때!';
+      setTimeout(()=>{document.getElementById('formulaReveal').style.display='block';
+        document.getElementById('quizWrap').style.opacity='.5';},600);
+    }else{
+      this.classList.add('wrong');msg.className='qmsg qno';msg.textContent=hintMap[val];
+    }
+  });
+});
+
+/* ═══ 이벤트 ══════════════════════════════════════════════ */
+// 에너지 효율 팝업
+document.getElementById('energyInfoBtn').addEventListener('click',()=>{
+  document.getElementById('energyInfoOv').style.display='flex';
+});
+document.getElementById('energyInfoClose').addEventListener('click',()=>{
+  document.getElementById('energyInfoOv').style.display='none';
+});
+
+const gtp=function(e){
+  var t=e.touches;
+  return (t&&t.length)?{x:t[0].clientX,y:t[0].clientY}:{x:e.clientX,y:e.clientY};
+};
+cvs.addEventListener('mousedown',function(e){drag={on:true,x:e.clientX,y:e.clientY};});
+cvs.addEventListener('mousemove',function(e){
+  if(!drag.on)return;e.preventDefault();
+  var p=gtp(e);CAM.th-=(p.x-drag.x)*.007;
+  CAM.ph=TMU.clamp(CAM.ph+(p.y-drag.y)*.007,.08,PI*.88);drag.x=p.x;drag.y=p.y;
+});
+cvs.addEventListener('mouseup',function(){drag.on=false;});
+cvs.addEventListener('mouseleave',function(){drag.on=false;});
+cvs.addEventListener('touchstart',function(e){
+  if(e.touches.length===1){e.preventDefault();drag={on:true,x:e.touches[0].clientX,y:e.touches[0].clientY};}
+},{passive:false});
+cvs.addEventListener('touchmove',function(e){
+  e.preventDefault();if(!drag.on)return;
+  var p=gtp(e);CAM.th-=(p.x-drag.x)*.007;
+  CAM.ph=TMU.clamp(CAM.ph+(p.y-drag.y)*.007,.08,PI*.88);drag.x=p.x;drag.y=p.y;
+},{passive:false});
+cvs.addEventListener('touchend',function(){drag.on=false;});
+cvs.addEventListener('touchcancel',function(){drag.on=false;});
+cvs.addEventListener('wheel',function(e){e.preventDefault();CAM.r=TMU.clamp(CAM.r+e.deltaY*.015,4,35);},{passive:false});
+document.querySelectorAll('.thsl').forEach(s=>{
+  s.addEventListener('input',function(){theta=parseInt(this.value)*DEG;updScene(theta);});
+});
+document.getElementById('bM').addEventListener('click',()=>setMode(true));
+document.getElementById('bG').addEventListener('click',()=>setMode(false));
+document.getElementById('bL').addEventListener('click',function(){
+  lightOn=!lightOn;
+  lgP1.visible=(lightOn&&phase===1);lgP2.visible=(lightOn&&phase===2);
+  this.textContent=lightOn?'☀️ 광선 ON':'☀️ 광선';
+  this.className='hb'+(lightOn?' gon':'');
+});
+document.getElementById('tab1').addEventListener('click',()=>setPhase(1));
+document.getElementById('tab2').addEventListener('click',()=>setPhase(3));
+document.getElementById('goMission').addEventListener('click',()=>setPhase(3));
+document.getElementById('acceptBtn').addEventListener('click',()=>{
+  // Phase 2 탐구 모드 시작
+  shadowVisible=false;iqStep=0;predAns=null;selOp=null;selFn=null;selAng=null;
+  missionActive=false;missionDone=false;
+  step1Mode='initial';finalAns=null;
+  // UI 초기화
+  ['iq1','iq2','iq3','iq4'].forEach(id=>{
+    const el=document.getElementById(id);el.classList.remove('show','active');
+  });
+  document.getElementById('iq0').classList.add('show','active');
+  document.getElementById('iq0btn').style.display='none';
+  document.getElementById('pred-msg').style.display='none';
+  document.getElementById('shadowShowBtn').style.display='block';
+  document.getElementById('backToStep1Btn').style.display='none';
+  document.getElementById('finalAnswerCheck').style.display='none';
+  document.getElementById('shadowDescMsg').style.display='none';
+  document.getElementById('angMsg').style.display='none';
+  document.getElementById('angInput').value='';
+  document.getElementById('selMsg').style.display='none';
+  document.getElementById('selResult').textContent="S' = S × ? = ?";
+  document.querySelectorAll('.sel-btn,.pbtn').forEach(b=>b.classList.remove('chosen','picked'));
+  document.getElementById('missionArea').style.display='none';
+  document.getElementById('iq1btn').style.display='none';
+  phase=2;
+  gnd1.visible=false;grid1.visible=false;hinge1.visible=false;
+  gnd2.visible=true;gndH.visible=true;hinge2.visible=true;
+  rockG.visible=true;landerG.visible=false;
+  powerStationG.visible=true; // 전력기지 처음부터 보이기 (어두운 상태)
+  const bgC=marsMode?0x0d0100:0x04091a;
+  scene.background=new THREE.Color(bgC);scene.fog=new THREE.FogExp2(bgC,.018);
+  document.getElementById('ph3ov').style.display='none';
+  document.getElementById('lps').style.display='flex';
+  document.getElementById('lp3inner').style.display='none';
+  document.getElementById('lp').style.background='#0d1630';
+  document.getElementById('p2content').style.display='flex';
+  document.getElementById('p2content').style.flexDirection='column';
+  document.getElementById('tab2').className='tab on';
+  CAM={th:.80,ph:.62,r:16};
+  theta=0;document.getElementById('sl').value=0;document.getElementById('sl').max=90;
+  updScene(theta);
+});
+document.getElementById('retryBtn').addEventListener('click',()=>{
+  theta=0;CAM={th:.80,ph:.58,r:12};shadowVisible=false;iqStep=0;selOp=null;selFn=null;selAng=null;
+  step1Mode='initial';finalAns=null;
+  lightOn=false;lgP1.visible=false;lgP2.visible=false;
+  const bLr=document.getElementById('bL');bLr.disabled=true;bLr.style.opacity='.35';bLr.style.cursor='not-allowed';
+  bLr.textContent='☀️ 광선';bLr.className='hb';
+  document.getElementById('formulaReveal').style.display='none';
+  document.getElementById('qmsg').style.display='none';
+  document.getElementById('quizWrap').style.opacity='1';
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.remove('correct','wrong'));
+  document.getElementById('mwin').style.display='none';document.getElementById('aibox').style.display='none';
+  document.getElementById('launchOv').style.display='none';document.getElementById('lOkBtn').style.display='none';
+  // 전력기지 불 끄기 (초기화)
+  if(powerStationG.userData.windows){
+    powerStationG.userData.windows.forEach(winMat => {
+      winMat.emissive = new THREE.Color(0x000000);
+      winMat.emissiveIntensity = 0;
+      winMat.color = new THREE.Color(0x112233);
+    });
+    powerStationG.userData.beacon.emissive = new THREE.Color(0x000000);
+    powerStationG.userData.beacon.emissiveIntensity = 0;
+    powerStationG.userData.beacon.color = new THREE.Color(0x440000);
+    powerStationG.userData.powered = false;
+  }
+  setPhase(1);setMode(true);
+});
+document.getElementById('bR').addEventListener('click',()=>document.getElementById('retryBtn').click());
+
+/* ═══ 리사이즈 ════════════════════════════════════════════ */
+function onRes(){
+  const w=wrap.clientWidth,h=wrap.clientHeight;
+  if(w>0&&h>0){rdr.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
+  const tc=document.getElementById('tc'),sc=document.getElementById('sc');
+  const tvw=document.getElementById('tvw'),svw=document.getElementById('svw');
+  if(tvw.clientWidth>0){tc.width=tvw.clientWidth;tc.height=tvw.clientHeight;}
+  if(svw.clientWidth>0){sc.width=svw.clientWidth;sc.height=svw.clientHeight;}
+  updScene(theta);
+}
+window.addEventListener('resize',onRes);
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(onRes).observe(wrap);
+
+/* ═══ 렌더 루프 ═══════════════════════════════════════════ */
+const FS=2.5,FM=11;
+function animLight(tm){
+  if(lightOn&&phase===1)lgP1.children.forEach(a=>{const d=a.userData;a.position.set(d.x,(7-(tm*FS+d.ph)%FM),d.z);});
+  if(lightOn&&phase===2)lgP2.children.forEach(a=>{const d=a.userData;const f=(tm*FS+d.ph)%FM;a.position.copy(V3(d.x,5,d.z)).addScaledVector(RAY_P2,f);});
+}
+setPhase(1);setMode(true);
+
+// orientationchange 대응 (iOS에서 resize보다 먼저 발생)
+window.addEventListener('orientationchange',function(){
+  setTimeout(onRes,200);
+});
+
+function tryStart(n){
+  onRes();
+  var w=wrap.clientWidth,h=wrap.clientHeight;
+  if(w>0&&h>0){
+    document.getElementById('ld').style.display='none';
+    var tm=0;
+    (function loop(){
+      requestAnimationFrame(loop);clock=tm+=.016;
+      updCam();animLight(tm);animLaunch();rdr.render(scene,cam);
+    })();
+  }else if(n>0){
+    setTimeout(function(){tryStart(n-1);},120);
+  }else{
+    document.getElementById('ld').textContent='⚠️ 오류';
+  }
+}
+setTimeout(function(){tryStart(15);},100);
+// iOS 직접 이동 모드: 사령부 복귀 버튼 표시
+(function(){
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS || sessionStorage.getItem('kosa_return')) {
+    var btn = document.getElementById('bHub');
+    if (btn) btn.style.display = '';
+  }
+})();
+}
+</script>
+</body>
+</html>
