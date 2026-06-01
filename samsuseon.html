@@ -16,107 +16,155 @@ body{width:100%;height:100%;height:-webkit-fill-available;background:#040410;ove
   -webkit-overflow-scrolling:touch}
 
 #app{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;
-  width:100%;height:100%;min-height:600px;background:#040410;overflow:hidden;
+  width:100%;height:100%;background:#040410;overflow:hidden;
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
   padding-left:env(safe-area-inset-left);
   padding-right:env(safe-area-inset-right)}
 
 
-#hd{flex-shrink:0;height:56px;background:#0b0100;border-bottom:2px solid #660800;
-    padding:0 14px;display:flex;gap:8px;align-items:center;overflow-x:auto}
-.ti{color:#ff9944;font-weight:bold;font-size:16px;flex-shrink:0;white-space:nowrap;margin-right:10px}
-.mt{background:#120100;border:2px solid #280400;border-radius:8px;color:#664422;
-    padding:8px 14px;font-size:14px;cursor:pointer;font-family:inherit;flex-shrink:0;
-    white-space:nowrap;line-height:1;transition:all .2s;min-height:40px}
+#hd{flex-shrink:0;height:46px;background:#0b0100;border-bottom:2px solid #660800;
+    padding:0 10px;display:flex;gap:6px;align-items:center;overflow-x:auto}
+.ti{color:#ff9944;font-weight:bold;font-size:14px;flex-shrink:0;white-space:nowrap;margin-right:6px}
+.mt{background:#120100;border:2px solid #280400;border-radius:7px;color:#664422;
+    padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit;flex-shrink:0;
+    white-space:nowrap;line-height:1;transition:all .2s;min-height:36px}
 .mt.ac{border-color:#ff6622;color:#ffaa55;background:#1d0500;font-weight:bold}
-.mt.dn{border-color:#004422;color:#22aa55;background:#030d07}
+.mt.dn{border-color:#004422;color:#22aa55;background:#030d07;cursor:pointer}
 .mt.lk{opacity:.28;cursor:not-allowed}
-.hb{background:#080800;border:2px solid #252510;border-radius:8px;color:#666622;
-    padding:8px 14px;font-size:14px;cursor:pointer;font-family:inherit;flex-shrink:0;line-height:1;min-height:40px}
+.hb{background:#080800;border:2px solid #252510;border-radius:7px;color:#666622;
+    padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit;flex-shrink:0;line-height:1;min-height:36px}
 .hb:hover{border-color:#997700;color:#ffcc33}
 .hb.on{background:#14072a;border-color:#7744cc;color:#aa88ff}
 
 
-#pg{flex-shrink:0;height:4px;background:#0a0a0a}
+#pg{flex-shrink:0;height:3px;background:#0a0a0a}
 #pgBar{height:100%;width:0%;transition:width .6s,background .6s}
 
 
+/* ── 가로형 바디 ── */
+#bd{flex:1;display:-webkit-flex;display:flex;min-height:0;overflow:hidden}
+
+/* ── 좌측 패널 ── */
+#lp{width:280px;flex-shrink:0;background:#07070f;border-right:2px solid #1a1a33;
+    display:flex;flex-direction:column;overflow:hidden}
+#lp-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;display:flex;flex-direction:column}
+
+/* ── 스토리 패널 (좌측 상단) ── */
 #storyPanel{
   flex-shrink:0;
   background:linear-gradient(180deg,#0d0100 0%,#080010 100%);
   border-bottom:1.5px solid #2a0a00;
   overflow:hidden;
-  transition:height .35s ease;
+  transition:max-height .35s ease;
 }
 
-
-#storyPanel.intro{height:280px}
-
-#storyPanel.active{height:75px}
+#storyPanel.intro{max-height:270px}
+#storyPanel.active{max-height:110px}
 
 
-#storyIntro{display:flex;height:100%;padding:10px 14px;gap:12px}
+#storyIntro{display:flex;height:100%;padding:8px 12px;gap:6px;flex-direction:column}
 .sto-scan{position:absolute;top:0;left:0;right:0;height:1.5px;
   background:linear-gradient(90deg,transparent,rgba(255,100,0,.7),transparent);
   animation:scan 3s linear infinite;pointer-events:none}
-@keyframes scan{0%{top:0}100%{top:220px}}
-.sto-left{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
-.sto-badge{display:inline-block;font-size:11px;letter-spacing:2px;color:#ff6600;
-  background:#1a0800;border:1px solid #662200;border-radius:3px;padding:3px 10px;
-  margin-bottom:4px;flex-shrink:0;font-weight:bold}
-.sto-title{font-size:18px;color:#ffcc44;font-weight:bold;line-height:1.4;margin-bottom:3px;flex-shrink:0}
-.sto-log{font-size:13px;color:#aa7733;line-height:1.8;white-space:pre-line;flex:1;overflow:hidden}
-.sto-alert{font-size:13px;color:#ff5533;border-top:1px solid #330a00;
-  padding-top:5px;margin-top:5px;line-height:1.7;white-space:pre-line;flex-shrink:0}
-.sto-right{width:180px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;justify-content:center}
-.obj-box{background:#060310;border:1px solid #0d0a22;border-radius:5px;padding:9px 11px}
-.obj-title{font-size:10px;color:#4444aa;letter-spacing:1px;margin-bottom:5px;text-transform:uppercase;font-weight:bold}
-.obj-item{font-size:12px;color:#8888cc;line-height:1.8;display:flex;gap:4px;align-items:flex-start}
-.obj-item::before{content:'›';color:#5555aa;flex-shrink:0;font-size:14px}
-.thm-box{background:#06050d;border:1px solid #220a33;border-radius:5px;padding:9px 11px}
-.thm-title{font-size:10px;color:#663388;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;font-weight:bold}
-.thm-eq{font-size:13px;color:#aa66cc;line-height:1.9;white-space:pre-line}
-.sto-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 14px 10px;
+@keyframes scan{0%{top:0}100%{top:180px}}
+.sto-left{flex:1;display:flex;flex-direction:column;min-width:0;gap:3px}
+.sto-badge{display:inline-block;font-size:10px;letter-spacing:2px;color:#ff6600;
+  background:#1a0800;border:1px solid #662200;border-radius:3px;padding:2px 8px;
+  flex-shrink:0;font-weight:bold;align-self:flex-start}
+.sto-title{font-size:13px;color:#ffcc44;font-weight:bold;line-height:1.3;flex-shrink:0}
+.sto-log{font-size:11px;color:#aa7733;line-height:1.65;white-space:pre-line;flex:1;overflow:hidden}
+.sto-alert{font-size:11px;color:#ff5533;border-top:1px solid #330a00;
+  padding-top:3px;line-height:1.5;white-space:pre-line;flex-shrink:0}
+.sto-right{display:flex;flex-shrink:0}
+.thm-box{flex:1;background:#06050d;border:1px solid #220a33;border-radius:5px;padding:6px 9px}
+.thm-title{font-size:9px;color:#663388;letter-spacing:1px;margin-bottom:2px;text-transform:uppercase;font-weight:bold}
+.thm-eq{font-size:11px;color:#aa66cc;line-height:1.7;white-space:pre-line}
+.sto-footer{display:flex;align-items:center;justify-content:space-between;padding:5px 12px 7px;
   border-top:1px solid #1a0800;flex-shrink:0}
-.sto-hint{font-size:11px;color:#4a2200;letter-spacing:.4px;font-weight:bold}
-#ioBtn{background:#1a0800;border:2px solid #cc5500;border-radius:7px;color:#ffaa22;
-  padding:7px 18px;font-size:12.5px;cursor:pointer;font-family:'Courier New',monospace;
+.sto-hint{font-size:9.5px;color:#4a2200;letter-spacing:.4px;font-weight:bold}
+#ioBtn{background:#1a0800;border:2px solid #cc5500;border-radius:6px;color:#ffaa22;
+  padding:5px 12px;font-size:11px;cursor:pointer;font-family:'Courier New',monospace;
   font-weight:bold;letter-spacing:.4px}
 #ioBtn:hover{background:#280f00;border-color:#ff8800;color:#ffdd44}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 #ioBtn{animation:blink 1.8s ease-in-out infinite}
 
 
-#storyActive{display:none;height:100%;padding:7px 14px;align-items:center;gap:10px}
+#storyActive{display:none;height:100%;padding:6px 12px;align-items:center;gap:8px}
 #storyActive.show{display:flex}
-.sa-badge{font-size:8.5px;letter-spacing:2px;color:#ff6622;background:#1a0500;
-  border:1px solid #440800;border-radius:3px;padding:2px 6px;flex-shrink:0}
+.sa-badge{font-size:8px;letter-spacing:2px;color:#ff6622;background:#1a0500;
+  border:1px solid #440800;border-radius:3px;padding:2px 5px;flex-shrink:0}
 .sa-info{flex:1;min-width:0}
-.sa-title{font-size:13px;color:#ffaa44;font-weight:bold;margin-bottom:2px}
-.sa-story{font-size:10px;color:#996633;line-height:1.6;white-space:pre-line}
+.sa-title{font-size:12px;color:#ffaa44;font-weight:bold;margin-bottom:1px}
+.sa-story{font-size:9.5px;color:#996633;line-height:1.5;white-space:pre-line}
 .sa-thm{flex-shrink:0;background:#06050d;border:1px solid #220a33;border-radius:5px;
-  padding:5px 9px;text-align:center}
-.sa-thm-eq{font-size:10px;color:#aa66cc;line-height:1.75;white-space:pre-line}
+  padding:4px 7px;text-align:center}
+.sa-thm-eq{font-size:9.5px;color:#aa66cc;line-height:1.7;white-space:pre-line}
 
 
-#main{flex:1;display:flex;min-height:0;overflow:hidden}
-#cw{flex:1;position:relative;min-width:0;overflow:hidden}
+/* 3D 캔버스 영역 */
+#main{flex:1;position:relative;min-width:0;overflow:hidden}
+#cw{width:100%;height:100%;position:relative;overflow:hidden}
 #c3{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 
 
-#hu{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.90);
-  border:2px solid #2a2a55;border-radius:10px;padding:12px 18px;pointer-events:none;z-index:10}
-.hr{display:flex;align-items:center;gap:10px;line-height:2.3;margin-bottom:4px}
-.hl{color:#8888bb;min-width:90px;font-size:14px;font-weight:bold}
-.hv{font-weight:bold;min-width:40px;text-align:right;font-size:16px;color:#ffdd88}
-.hk{min-width:20px;font-size:16px;color:#88dd88}
+#hu{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.90);
+  border:2px solid #2a2a55;border-radius:8px;padding:8px 14px;pointer-events:none;z-index:10}
+.hr{display:flex;align-items:center;gap:8px;line-height:2.0;margin-bottom:2px}
+.hl{color:#8888bb;min-width:80px;font-size:12px;font-weight:bold}
+.hv{font-weight:bold;min-width:36px;text-align:right;font-size:14px;color:#ffdd88}
+.hk{min-width:18px;font-size:14px;color:#88dd88}
 
 
-#so{position:absolute;bottom:0;left:0;right:0;padding:8px 16px 6px;pointer-events:none;
+#so{position:absolute;bottom:0;left:0;right:0;padding:6px 12px 5px;pointer-events:none;
   background:linear-gradient(transparent,rgba(0,0,0,.97) 18%);z-index:10}
-#sti{font-size:14px;color:#ffaa55;font-weight:bold;margin-bottom:3px}
-#sbo{font-size:12px;color:#cc8844;line-height:1.8;white-space:pre-line}
+#sti{font-size:13px;color:#ffaa55;font-weight:bold;margin-bottom:2px}
+#sbo{font-size:11px;color:#cc8844;line-height:1.7;white-space:pre-line}
+
+/* ── 좌측 패널 스텝 카드 ── */
+#sp{flex:1;padding:8px;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
+.sv{background:#0c0c1e;border-radius:6px;padding:8px 10px;margin-bottom:7px;border-left:4px solid #1a1a33}
+.sv.ac{border-left-color:#ff9944;background:#110800}
+.sv.dn{border-left-color:#00cc55;background:#041008}
+.sv.lk{opacity:.3}
+.sl{font-size:10px;color:#6666aa;margin-bottom:3px;text-transform:uppercase;
+  letter-spacing:.5px;font-weight:bold}
+.sv.ac .sl{color:#ffaa44}.sv.dn .sl{color:#44cc77}.sv.lk .sl{color:#3a3a55}
+.sd{font-size:12px;line-height:1.7;color:#9999bb;white-space:pre-line}
+.sv.ac .sd{color:#ffcc88}.sv.dn .sd{color:#55cc88}.sv.lk .sd{color:#2a2a44}
+.cb{width:100%;margin-top:5px;border-radius:6px;padding:8px 6px;font-size:12px;
+  cursor:default;font-family:inherit;border:2px solid #1a1a33;
+  background:#0a0a1a;color:#3a3a66;line-height:1.4;font-weight:bold}
+.cb.rd{border-color:#55bb00;background:#0c2203;color:#aaff44;cursor:pointer;min-height:44px}
+.cb.rd:hover{background:#152d04}
+@keyframes gl{0%,100%{opacity:1}50%{opacity:.3}}
+.cb.rd{animation:gl 1.4s ease-in-out infinite}
+.cb.fi{border-color:#114422;background:#040c07;color:#33aa66;animation:none;cursor:default}
+.ab{width:100%;margin-top:6px;border-radius:7px;padding:10px 6px;font-size:12px;
+  cursor:pointer;font-family:inherit;border:2px solid #884400;
+  background:#1a0800;color:#ffaa22;line-height:1.4;font-weight:bold;min-height:46px}
+.ab:hover{background:#281200;border-color:#ff8800}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,136,0,.4)}
+  50%{box-shadow:0 0 8px 4px rgba(255,136,0,.15)}}
+.ab{animation:pulse 2s infinite}
+.ab.done{border-color:#006633;background:#021208;color:#44ff88;animation:none;cursor:default}
+
+/* ── 우측 슬라이더 패널 ── */
+#rp{width:230px;flex-shrink:0;background:#06060f;border-left:2px solid #1a1a33;
+  display:flex;flex-direction:column;min-height:0;overflow:hidden}
+#ct{flex-shrink:0;padding:10px 10px 60px;background:#07070f;border-top:1px solid #131330}
+.cr{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin-bottom:8px}
+.cr-label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#7777aa;font-weight:bold;padding:0 2px}
+.cr-label .cv{font-size:11px;color:#ffdd88;font-weight:bold}
+.cr input[type=range]{width:100%;accent-color:#ffee00;height:26px;cursor:pointer;
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;
+  -webkit-user-drag:none}
+.cr input[type=range]::-webkit-slider-thumb{-webkit-user-select:none;user-select:none}
+.cv{font-size:11px;color:#ffdd88;font-weight:bold}
+#cti{font-size:10px;color:#444455;line-height:1.6;border-top:1px solid #0e0e1a;
+  padding-top:5px;margin-top:5px;white-space:pre-line}
 
 
 #transit{position:absolute;inset:0;z-index:30;display:none;flex-direction:column;
@@ -163,6 +211,14 @@ body{width:100%;height:100%;height:-webkit-fill-available;background:#040410;ove
   50%{box-shadow:0 0 8px 4px rgba(255,136,0,.15)}}
 .ab{animation:pulse 2s infinite}
 .ab.done{border-color:#006633;background:#021208;color:#44ff88;animation:none;cursor:default}
+/* ── 우측 패널 정리 핵심 + 임무목표 ── */
+#rp-info{flex-shrink:0;display:flex;flex-direction:row;border-bottom:1.5px solid #1a1a33}
+#rp-thm{flex:1;min-width:0;padding:9px 10px 8px;background:linear-gradient(180deg,#060012 0%,#07070f 100%);border-right:1px solid #2a1a44}
+.rp-thm-title{font-size:8.5px;color:#7744cc;letter-spacing:1px;margin-bottom:3px;text-transform:uppercase;font-weight:bold}
+.rp-thm-eq{font-size:11px;color:#bb88ff;line-height:1.7;white-space:pre-line}
+#rp-obj{flex:1;min-width:0;padding:9px 10px 8px;background:#07070f}
+.rp-obj-title{font-size:8.5px;color:#ff9944;letter-spacing:1px;margin-bottom:3px;text-transform:uppercase;font-weight:bold}
+#ioObj{font-size:11.5px;color:#cc8844;line-height:1.75}
 #ct{flex-shrink:0;padding:12px 12px 80px;background:#07070f;border-top:2px solid #131330}
 .cr{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin-bottom:10px}
 .cr-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#7777aa;font-weight:bold;padding:0 2px}
@@ -174,6 +230,16 @@ body{width:100%;height:100%;height:-webkit-fill-available;background:#040410;ove
 .cv{font-size:12px;color:#ffdd88;font-weight:bold}
 #cti{font-size:11px;color:#444455;line-height:1.7;border-top:1px solid #0e0e1a;
   padding-top:5px;margin-top:5px;white-space:pre-line}
+/* ── 슬라이더 ±버튼 ── */
+.cr-row{display:flex;align-items:center;gap:5px}
+.cr-row input[type=range]{flex:1;min-width:0}
+.sb{flex-shrink:0;width:34px;height:34px;border-radius:7px;
+  background:#0e0e22;border:2px solid #2a2a55;color:#8888cc;
+  font-size:18px;font-weight:bold;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;line-height:1;padding:0}
+.sb:active{background:#1a1a44;border-color:#6666cc;color:#ccccff}
 #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:#040410;z-index:50;font-size:14px;color:#ff9944;gap:12px}
 #loading::before{content:'';width:32px;height:32px;border:3px solid #330800;border-top-color:#ff6622;
@@ -182,13 +248,11 @@ body{width:100%;height:100%;height:-webkit-fill-available;background:#040410;ove
 
 
 @media (max-width:600px){
-  .ti{font-size:11px}
-  .mt,.hb{font-size:10px;padding:4px 7px}
-  #storyPanel.intro{height:200px}
-  #storyPanel.active{height:65px}
-  .sto-log{font-size:9.5px}
-  #rp{width:168px}
-  .cr-label{font-size:11px}
+  .ti{font-size:10px}
+  .mt,.hb{font-size:9.5px;padding:4px 6px}
+  #lp{width:230px}
+  #rp{width:180px}
+  .cr-label{font-size:10px}
 }
 
 
@@ -200,14 +264,15 @@ button,.mt,.hb,.cb,.ab,.tr-btn,#ioBtn{
   user-select:none;
 }
 #sp{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+#lp-scroll{-webkit-overflow-scrolling:touch;}
 #hd{-webkit-overflow-scrolling:touch;}
 input[type=range]{touch-action:pan-x;cursor:pointer;}
 
 @media (hover:none) and (pointer:coarse){
-  .mt,.hb{min-height:44px;min-width:44px;}
-  .cb,.ab{min-height:52px;}
-  #ioBtn{min-height:44px;}
-  .cr input[type=range]{height:36px;}
+  .mt,.hb{min-height:40px;min-width:40px;}
+  .cb,.ab{min-height:48px;}
+  #ioBtn{min-height:40px;}
+  .cr input[type=range]{height:34px;}
 }
 </style>
 </head>
@@ -227,93 +292,124 @@ input[type=range]{touch-action:pan-x;cursor:pointer;}
   <!-- 진행 바 -->
   <div id="pg"><div id="pgBar"></div></div>
 
-  <!-- ══ 스토리 패널 (상단) ══ -->
-  <div id="storyPanel" class="intro" style="position:relative">
-    <div class="sto-scan"></div>
-    <!-- 인트로 모드 -->
-    <div id="storyIntro">
-      <div class="sto-left">
-        <div>
-          <div class="sto-badge" id="ioBadge">MISSION 01</div>
-          <div class="sto-title" id="ioTitle"></div>
-          <div class="sto-log" id="ioLog"></div>
+  <!-- ══ 가로형 바디: 좌측패널 + 3D캔버스 + 우측패널 ══ -->
+  <div id="bd">
+
+    <!-- 좌측 패널 (스토리 + 스텝) -->
+    <div id="lp">
+      <div id="lp-scroll">
+
+        <!-- 스토리 패널 (인트로 시에만 표시) -->
+        <div id="storyPanel" class="intro" style="position:relative">
+          <div class="sto-scan"></div>
+          <!-- 인트로 모드 -->
+          <div id="storyIntro">
+            <div class="sto-left">
+              <div class="sto-badge" id="ioBadge">MISSION 01</div>
+              <div class="sto-title" id="ioTitle"></div>
+              <div class="sto-log" id="ioLog"></div>
+              <div class="sto-alert" id="ioAlert"></div>
+            </div>
+          </div>
+          <div class="sto-footer">
+            <div class="sto-hint" id="ioHint"></div>
+            <button id="ioBtn">▶ 임무 수락!</button>
+            <button id="btnDiscovery1" style="display:none; background:#2a50a0; border:1px solid #5588dd; color:#fff; padding:4px 10px; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:8px; font-size:11px;">
+              정리① 발견!
+            </button>
+          </div>
+          <!-- 활성 모드 (컴팩트) -->
+          <div id="storyActive">
+            <div class="sa-badge" id="saBadge">M01</div>
+            <div class="sa-info">
+              <div class="sa-title" id="saTitle"></div>
+              <div class="sa-story" id="saStory"></div>
+            </div>
+
+          </div>
         </div>
-        <div class="sto-alert" id="ioAlert"></div>
+
+        <!-- 스텝 목록 -->
+        <div id="sp" style="flex:1;padding:8px;overflow-y:auto;min-height:0"></div>
+      </div><!-- /lp-scroll -->
+    </div><!-- /lp -->
+
+    <!-- 3D 캔버스 영역 -->
+    <div id="main">
+      <div id="cw">
+        <canvas id="c3"></canvas>
+        <div id="loading">화성 기지 초기화 중...</div>
+
+        <!-- 전환 오버레이 -->
+        <div id="transit">
+          <div class="tr-badge" id="trBadge"></div>
+          <div class="tr-title" id="trTitle"></div>
+          <div class="tr-body" id="trBody"></div>
+          <div class="tr-sep"></div>
+          <div class="tr-next" id="trNext"></div>
+          <button class="tr-btn" id="trBtn">▶ 다음 임무!</button>
+        </div>
+
+        <!-- HUD -->
+        <div id="hu">
+          <div class="hr" id="hu1"><span class="hl" id="hl1"></span><span class="hv" id="hv1" style="color:#5555aa">—</span><span class="hk" id="hk1"></span></div>
+          <div class="hr" id="hu2"><span class="hl" id="hl2"></span><span class="hv" id="hv2" style="color:#5555aa">—</span><span class="hk" id="hk2"></span></div>
+          <div class="hr" id="hu3" style="display:none"><span class="hl" id="hl3"></span><span class="hv" id="hv3" style="color:#5555aa">—</span><span class="hk" id="hk3"></span></div>
+          <div class="hr" id="hu4" style="display:none"><span class="hl" id="hl4"></span><span class="hv" id="hv4" style="color:#5555aa">—</span><span class="hk" id="hk4"></span></div>
+        </div>
+        <div id="so"><div id="sti"></div><div id="sbo"></div></div>
       </div>
-      <div class="sto-right">
-        <div class="obj-box">
-          <div class="obj-title">📋 임무 목표</div>
+    </div>
+
+    <!-- 우측 패널 (정리핵심 + 임무목표 + 슬라이더) -->
+    <div id="rp">
+      <!-- 정리 핵심 + 임무 목표 (상단) -->
+      <div id="rp-info">
+        <div id="rp-thm">
+          <div class="rp-thm-title">📐 정리 핵심</div>
+          <div class="rp-thm-eq" id="ioThm"></div>
+        </div>
+        <div id="rp-obj">
+          <div class="rp-obj-title">📋 임무 목표</div>
           <div id="ioObj"></div>
         </div>
-        <div class="thm-box">
-          <div class="thm-title">📐 정리 힌트</div>
-          <div class="thm-eq" id="ioThm"></div>
-        </div>
       </div>
-    </div>
-<div class="sto-footer">
-      <div class="sto-hint" id="ioHint"></div>
-      
-      <button id="ioBtn">▶ 임무 수락!</button>
-      
-      <button id="btnDiscovery1" style="display:none; background:#2a50a0; border:1px solid #5588dd; color:#fff; padding:5px 12px; border-radius:4px; cursor:pointer; font-weight:bold; margin-left:10px;">
-        정리① 발견!
-      </button>
-    </div>
-
-    <!-- 활성 모드 (컴팩트) -->
-    <div id="storyActive">
-      <div class="sa-badge" id="saBadge">M01</div>
-      <div class="sa-info">
-        <div class="sa-title" id="saTitle"></div>
-        <div class="sa-story" id="saStory"></div>
-      </div>
-      <div class="sa-thm">
-        <div class="sa-thm-eq" id="saThm"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ 메인: 3D 캔버스 + 사이드 패널 ══ -->
-  <div id="main">
-    <div id="cw">
-      <canvas id="c3"></canvas>
-      <div id="loading">화성 기지 초기화 중...</div>
-
-      <!-- 전환 오버레이 -->
-      <div id="transit">
-        <div class="tr-badge" id="trBadge"></div>
-        <div class="tr-title" id="trTitle"></div>
-        <div class="tr-body" id="trBody"></div>
-        <div class="tr-sep"></div>
-        <div class="tr-next" id="trNext"></div>
-        <button class="tr-btn" id="trBtn">▶ 다음 임무!</button>
-      </div>
-
-      <!-- HUD -->
-      <div id="hu">
-        <div class="hr" id="hu1"><span class="hl" id="hl1"></span><span class="hv" id="hv1" style="color:#5555aa">—</span><span class="hk" id="hk1"></span></div>
-        <div class="hr" id="hu2"><span class="hl" id="hl2"></span><span class="hv" id="hv2" style="color:#5555aa">—</span><span class="hk" id="hk2"></span></div>
-        <div class="hr" id="hu3" style="display:none"><span class="hl" id="hl3"></span><span class="hv" id="hv3" style="color:#5555aa">—</span><span class="hk" id="hk3"></span></div>
-        <div class="hr" id="hu4" style="display:none"><span class="hl" id="hl4"></span><span class="hv" id="hv4" style="color:#5555aa">—</span><span class="hk" id="hk4"></span></div>
-      </div>
-      <div id="so"><div id="sti"></div><div id="sbo"></div></div>
-    </div>
-
-    <!-- 우측 스텝 패널 -->
-    <div id="rp">
-      <div id="sp"></div>
+      <!-- 슬라이더 -->
       <div id="ct">
-        <div class="cr"><div class="cr-label">P 높이 <span class="cv" id="vZ">3.50</span></div><input type="range" id="sZ" min="0.5" max="7" step="0.05" value="3.5"></div>
-        <div class="cr"><div class="cr-label">H 위치 <span class="cv" id="vH">-2.0</span></div><input type="range" id="sH" min="-7" max="7" step="0.05" value="-2"></div>
-        <div class="cr" id="rU" style="display:none"><div class="cr-label">O(u) <span class="cv" id="vU">1.0</span></div><input type="range" id="sU" min="-5" max="5" step="0.05" value="1"></div>
-        <div class="cr" id="rV" style="display:none"><div class="cr-label">O(v) <span class="cv" id="vV">2.0</span></div><input type="range" id="sV" min="-5" max="5" step="0.05" value="2"></div>
+        <div class="cr"><div class="cr-label">P 높이 <span class="cv" id="vZ">3.50</span></div>
+          <div class="cr-row">
+            <button class="sb" data-sid="sZ" data-dir="-1">−</button>
+            <input type="range" id="sZ" min="0.5" max="7" step="0.05" value="3.5">
+            <button class="sb" data-sid="sZ" data-dir="1">+</button>
+          </div>
+        </div>
+        <div class="cr"><div class="cr-label">H 위치 <span class="cv" id="vH">-2.0</span></div>
+          <div class="cr-row">
+            <button class="sb" data-sid="sH" data-dir="-1">−</button>
+            <input type="range" id="sH" min="-7" max="7" step="0.05" value="-2">
+            <button class="sb" data-sid="sH" data-dir="1">+</button>
+          </div>
+        </div>
+        <div class="cr" id="rU" style="display:none"><div class="cr-label">O(u) <span class="cv" id="vU">1.0</span></div>
+          <div class="cr-row">
+            <button class="sb" data-sid="sU" data-dir="-1">−</button>
+            <input type="range" id="sU" min="-5" max="5" step="0.05" value="1">
+            <button class="sb" data-sid="sU" data-dir="1">+</button>
+          </div>
+        </div>
+        <div class="cr" id="rV" style="display:none"><div class="cr-label">O(v) <span class="cv" id="vV">2.0</span></div>
+          <div class="cr-row">
+            <button class="sb" data-sid="sV" data-dir="-1">−</button>
+            <input type="range" id="sV" min="-5" max="5" step="0.05" value="2">
+            <button class="sb" data-sid="sV" data-dir="1">+</button>
+          </div>
+        </div>
         <div id="cti">드래그: 시점 회전
 🔄버튼 → P 이동 모드</div>
       </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /bd -->
 
 <script>
 /**
@@ -628,26 +724,26 @@ var betaTgt=0,betaOpa=0,betaPulse=0;
 // ══ 퀘스트 스토리 데이터 ══
 var QD={
   1:{badge:'MISSION 01',title:'🚨 통신 안테나 안정화',
-     log:'화성력 2157.03.14  02:17\n\n갑작스러운 Type-4 모래폭풍이 KOSA-1을 강타했습니다.\n통신 주 안테나가 쓰러져 지구 교신이 두절됐습니다.\n안테나 기둥 PO는 지면 α에 수직이어야 작동합니다.',
-     alert:'⚠  OH⊥l 달성 → PH⊥l 을 삼수선 정리로 증명!',
+     log:'화성력 2157.03.14  02:17\n\nType-4 모래폭풍이 KOSA-1을 강타!\n안테나 기둥 PO는 지면 α에 수직이어야 작동.',
+     alert:'⚠  OH⊥l 달성 → PH⊥l 삼수선 정리 증명!',
      objs:['OH⊥l 달성','β 평면 발견','PH⊥l 증명','안테나 복구'],
      thm:'PO⊥α\nOH⊥l\n──────\n∴ PH⊥l',
      hint:'KOSA-1 생존 확률: H 위치에 달림',
      saTitle:'🚨 M1: 통신 안테나 안정화',
      saStory:'OH⊥l → β 평면 → PH⊥l 발견!',
-     saThm:'PO⊥α, OH⊥l\n→ PH⊥l'},
+     saThm:'PO⊥α (즉, PO⊥l), OH⊥l\n→ PH⊥l'},
   2:{badge:'MISSION 02',title:'📡 로버 ARES-7 구조 작전',
-     log:'화성력 2157.03.14  08:43\n\n안테나 복구 성공! 지구 교신 재개!\n북쪽 150km에서 로버 ARES-7의 SOS 신호!\n신호 방향 PH⊥l 달성 시 OH도 수직이 될까요?',
-     alert:'⚠  PH⊥l 달성 → OH⊥l 자동 성립: 삼수선 정리 ②!',
+     log:'화성력 2157.03.14  08:43\n\n안테나 복구 성공! 지구 교신 재개!\n북쪽 150km에서 ARES-7의 SOS 신호 포착!',
+     alert:'⚠  PH⊥l 달성 → OH⊥l 자동 성립: 정리 ②!',
      objs:['PH⊥l 달성','β 평면 발견','OH⊥l 자동 증명','신호 발사'],
-     thm:'PO⊥α\nPH⊥l\n──────\n∴ OH⊥l',
+     thm:'PO⊥α (즉,PO⊥l) \nPH⊥l\n──────\n∴ OH⊥l',
      hint:'로버 ARES-7 배터리 잔량: 11%',
      saTitle:'📡 M2: 신호 방향 최적화',
      saStory:'PH⊥l → β 평면 → OH⊥l 발견!',
      saThm:'PO⊥α, PH⊥l\n→ OH⊥l'},
   3:{badge:'MISSION 03',title:'🔧 쓰러진 안테나 세우기',
-     log:'화성력 2157.03.15  14:22\n\n모래폭풍으로 쓰러진 메인 안테나 기둥(PO)을 다시 일으켜 세워야 합니다.\n현재 기둥은 고정축(O)을 중심으로 완전히 누워 있거나 삐딱하게 걸쳐 있습니다.\n기둥을 평면과 완벽한 수직(PO ⊥ α)으로 고정하기 위해,\n3개의 독립된 수직 기어(Gear)를 완전히 맞물려야 합니다.',
-     alert:'⚠  PH⊥l, OH⊥l, PO⊥OH 달성 → PO⊥α 자동 성립!',
+     log:'화성력 2157.03.15  14:22\n\n메인 안테나 기둥(PO)을 수직으로 고정!\n3개의 수직 기어를 완전히 맞물려야 합니다.',
+     alert:'⚠  PH⊥l, OH⊥l, PO⊥OH → PO⊥α 자동 성립!',
      objs:['전력선과 수직 (PH⊥l)','지지대와 수직 (OH⊥l)','기어 맞물림 (PO⊥OH)','기둥 수직 고정 (PO⊥α)'],
      thm:'PH⊥l\nOH⊥l\nPO⊥OH\n──────\n∴ PO⊥α',
      hint:'안테나 복구율: 3개 기어의 정확도에 달림',
@@ -814,16 +910,7 @@ var updTabs=function(){
     b.textContent=pre+labels[i-1];
     b.className='mt'+(ST.mis===i?' ac':ST.cleared[i-1]?' dn':ST.unlocked[i-1]?'':' lk');
     
-    // 완수된 미션 탭 클릭 시 정리 화면 표시
-    if(ST.cleared[i-1]){
-      b.onclick=(function(mis){
-        return function(){
-          if(ST.completedMissions[mis]){
-            showTransit(mis, mis+1);
-          }
-        };
-      })(i);
-    }
+    // 완수된 미션 탭 - onclick은 아래 for문에서 통합 처리
   }
 };
 var getPos=function(){
@@ -1175,6 +1262,8 @@ var doResetMis=function(){
   try{
   ST.step=1;ST.done=[];ST.pB=ptA(2.2,-1.5);ST.pH=3.5;ST.tH=-2;ST.uO=1;ST.vO=2;
   ST.missionDone=false;ST.hudVisible=MC[ST.mis].hudInit;ST.introMode=true;
+  // 스텝 목록 스크롤 맨 위로 초기화
+  var spEl=document.getElementById('sp');if(spEl)spEl.scrollTop=0;
   betaTgt=0;betaOpa=0;betaPulse=0;betaMat.opacity=0;betaEdgeMat.opacity=0;betaLbl.material.opacity=0;
   antAnim=0;antAnimating=false;antTargetPos=null;
   cableAnim.active=false;
@@ -1313,7 +1402,56 @@ var slMap={sZ:'pH',sH:'tH',sU:'uO',sV:'vO'};
 document.getElementById('bM').onclick=function(){setMars(!ST.mars);};
 document.getElementById('bD').onclick=function(){var m=(ST.drag=ST.drag==='rot'?'moveP':'rot')==='moveP';this.textContent=m?'📍 P이동':'🔄 회전';this.className='hb'+(m?' on':'');document.getElementById('cti').textContent=m?'📍 드래그: P 이동\nZ슬라이더: 높이':'드래그: 시점 회전\n🔄버튼→P 이동';};
 document.getElementById('bR').onclick=function(){doResetAll();};
-for(var ti=1;ti<=3;ti++){(function(i){document.getElementById('m'+i).onclick=function(){if(!ST.unlocked[i-1])return;if(ST.mis===i&&!ST.introMode)return;ST.mis=i;doResetMis();buildUI();showIntro(i);};;})(ti);}
+
+// ── 슬라이더 ±버튼 동작 (클릭 + 길게 누르면 연속) ──
+(function(){
+  var dispMap={sZ:'vZ',sH:'vH',sU:'vU',sV:'vV'};
+  var stateMap={sZ:'pH',sH:'tH',sU:'uO',sV:'vO'};
+  var holdTimer=null,holdInterval=null;
+  function stepSlider(sid,dir){
+    var el=document.getElementById(sid);
+    if(!el)return;
+    var step=parseFloat(el.step)||0.05;
+    var mn=parseFloat(el.min),mx=parseFloat(el.max);
+    var val=Math.round((parseFloat(el.value)+dir*step)*1000)/1000;
+    val=Math.max(mn,Math.min(mx,val));
+    el.value=val;
+    var sv=document.getElementById(dispMap[sid]);
+    if(sv)sv.textContent=parseFloat(val).toFixed(2);
+    var sk=stateMap[sid];
+    if(sk&&typeof ST!=='undefined')ST[sk]=val;
+  }
+  function startHold(sid,dir){
+    stopHold();
+    stepSlider(sid,dir);
+    holdTimer=setTimeout(function(){
+      holdInterval=setInterval(function(){stepSlider(sid,dir);},80);
+    },350);
+  }
+  function stopHold(){
+    clearTimeout(holdTimer);clearInterval(holdInterval);
+    holdTimer=null;holdInterval=null;
+  }
+  document.querySelectorAll('.sb').forEach(function(btn){
+    var sid=btn.getAttribute('data-sid');
+    var dir=parseInt(btn.getAttribute('data-dir'));
+    btn.addEventListener('mousedown',function(e){e.preventDefault();startHold(sid,dir);});
+    btn.addEventListener('touchstart',function(e){e.preventDefault();startHold(sid,dir);},{passive:false});
+    btn.addEventListener('mouseup',stopHold);
+    btn.addEventListener('mouseleave',stopHold);
+    btn.addEventListener('touchend',stopHold);
+    btn.addEventListener('touchcancel',stopHold);
+  });
+})();
+
+for(var ti=1;ti<=3;ti++){(function(i){document.getElementById('m'+i).onclick=function(){
+  if(!ST.unlocked[i-1])return;
+  // 완수된 미션은 항상 재방문 허용, 현재 미션 진행 중일 때만 막음
+  if(ST.mis===i&&!ST.introMode&&!ST.cleared[i-1])return;
+  ST.mis=i;doResetMis();buildUI();showIntro(i);
+  // 스텝 목록 스크롤 맨 위로
+  var spEl=document.getElementById('sp');if(spEl)spEl.scrollTop=0;
+};;})(ti);}
 var onRes=function(){var w=wrap.clientWidth,h=wrap.clientHeight;if(w>0&&h>0){rdr.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}};
 window.addEventListener('resize',onRes);
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(onRes).observe(wrap);
