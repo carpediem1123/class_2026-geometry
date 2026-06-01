@@ -212,46 +212,56 @@ body{width:100%;height:100%;height:-webkit-fill-available;overflow:hidden;
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.85}}
 
 /* ── 심화 패널 ── */
-#advPanel{width:274px;flex-shrink:0;background:#0a1020;border-right:2px solid #1e3060;
-  display:none;flex-direction:column;overflow-x:hidden;overflow-y:hidden}
-.adv-tabs{display:flex;flex-shrink:0;border-bottom:2px solid #1e3060;background:#080e1c}
-.adv-tab{flex:1;padding:8px 3px;font-size:11px;font-weight:bold;color:#445577;
-  background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
-.adv-tab.on{color:#88ccff;border-bottom-color:#5588ff;background:#0d1630}
-.adv-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding:9px 10px 9px 10px;display:flex;flex-direction:column;gap:7px}
-.adv-card{background:#091525;border:1.5px solid #1e3060;border-radius:8px;
-  padding:9px 11px;flex-shrink:0;overflow:visible;word-break:keep-all}
-.adv-card.ok-card{border-color:#22aa44}
-.adv-badge{display:inline-block;font-size:9px;letter-spacing:1px;padding:2px 7px;
-  border-radius:3px;font-weight:bold;margin-bottom:6px}
-.adv-badge.b0{background:#0c1f3a;color:#66aaff;border:1px solid #2244aa}
-.adv-badge.b1{background:#1a0c2a;color:#cc88ff;border:1px solid #6622cc}
-.adv-badge.b2{background:#0a1f0e;color:#44ff88;border:1px solid #116633}
-.adv-title{font-size:13px;color:#ddeeff;font-weight:bold;margin-bottom:6px;line-height:1.5;word-break:keep-all;overflow-wrap:break-word}
-.adv-body{font-size:11.5px;color:#99aabb;line-height:1.75;white-space:pre-line;margin-bottom:8px;word-break:keep-all;overflow-wrap:break-word}
-.adv-step{font-size:10px;color:#446688;letter-spacing:1px;font-weight:bold;
-  text-transform:uppercase;margin-bottom:5px;padding:3px 0;border-top:1px solid #1a2a40}
-.adv-choices{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px}
-.adv-btn{padding:10px 3px;background:#0d1c38;border:1.5px solid #2a4070;
-  border-radius:7px;color:#aabbdd;font-size:12px;font-weight:bold;cursor:pointer;
-  font-family:inherit;line-height:1.3;text-align:center}
-.adv-btn.ok{background:#062010;border-color:#22aa44;color:#55ff88}
-.adv-btn.ng{background:#1a0808;border-color:#aa2222;color:#ff7777}
-.adv-fb{font-size:11.5px;line-height:1.6;padding:7px 9px;border-radius:6px;
-  display:none;white-space:pre-line;margin-top:4px}
-.adv-fb.ok{background:#042010;color:#44ff88;border:1px solid #115522}
-.adv-fb.ng{background:#180808;color:#ff9999;border:1px solid #882222}
-.adv-action{width:100%;margin-top:6px;padding:9px;border-radius:7px;font-size:12px;
-  font-weight:bold;cursor:pointer;font-family:inherit;border:1.5px solid #3366cc;
-  background:#0d1c38;color:#99bbee;text-align:center;display:block}
-.adv-action:disabled{opacity:.4;cursor:not-allowed}
-.adv-action.green{border-color:#116633;background:#042010;color:#44ff88}
-.prog-bar{height:3px;background:#0d1630;border-radius:2px;margin:0 0 6px}
-.prog-fill{height:100%;background:linear-gradient(90deg,#2255cc,#44aaff);
-  border-radius:2px;transition:width .4s ease}
-.adv-ans-box{text-align:center;padding:10px;background:#0a1020;border-radius:7px;
-  margin-top:5px;border:1.5px solid #ffdd44}
+/* ── 심화 패널 전체화면 고도화 ── */
+#advPanel {
+  position: fixed;   /* 화면 전체에 독점 배치 */
+  top: 0;
+  left: 0;
+  width: 100vw;      /* 가로 100% 꽉 채움 */
+  height: 100vh;     /* 세로 100% 꽉 채움 */
+  background: #0a1020;
+  z-index: 9999;     /* 메인화면 3D 및 패널보다 무조건 위 */
+  display: none;     /* 평소에는 숨김 */
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 전체화면 내부에 iframe을 빈틈없이 채우는 설정 */
+#advPanel iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* 기본 탐구 모드로 안전하게 돌아갈 수 있는 고정 UI 버튼 */
+#advCloseBtn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 10000;    /* iframe보다 위에 배치 */
+  padding: 10px 18px;
+  background: rgba(13, 28, 56, 0.9);
+  color: #88ccff;
+  border: 1.5px solid #2a4070;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+}
+#advCloseBtn:hover {
+  background: #1e3563;
+  color: #ffffff;
+  border-color: #5588ff;
+}
+
+/* 기존 우측 좁은 공간에서 쓰이던 불필요한 퀴즈 UI 레이아웃 요소들은 완전히 숨기거나 제거 */
+.adv-tabs, .adv-scroll, .adv-card, .adv-choices, .adv-ans-box {
+  display: none !important;
+}
+
+
 </style>
 </head>
 <body>
@@ -260,7 +270,7 @@ body{width:100%;height:100%;height:-webkit-fill-available;overflow:hidden;
     <span class="ti">☀️ 정사영 탐구</span>
     <button class="tab on" id="tab1">📐 개념탐구</button>
     <button class="tab" id="tab2">🚀 미션탐구</button>
-    <button id="tab3" class="tab">⚡ 에너지 돔 분석: 그림자 평면 잇기</button>
+    <button id="tab3" class="tab">⚡ 공간잇기(空間-IT-gi) </button>
     <div style="width:1px;height:24px;background:#1e3060;margin:0 2px;flex-shrink:0"></div>
     <button class="hb on" id="bM">🪐 Mars</button>
     <button class="hb" id="bG">📐 기하</button>
@@ -270,12 +280,9 @@ body{width:100%;height:100%;height:-webkit-fill-available;overflow:hidden;
   </div>
   <div id="bd">
   <!-- ══ 심화문제 iframe ══ -->
-  <div id="advPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden;position:relative">
-    <iframe id="advFrame"
-      sandbox="allow-scripts allow-same-origin">
-    </iframe>
-  </div>
-  <!-- /advPanel -->
+<div id="advPanel">
+  <iframe src="about:blank"></iframe>
+</div>  <!-- /advPanel -->
 
     <div id="lp">
       <div id="lp3inner">
@@ -2067,32 +2074,31 @@ setTimeout(function(){tryStart(15);},100);
 
 /* ═══ iframe 통신 & 탭 연결 ════════════════════════════════ */
 function openAdvIframe(){
-  window._advOpen=true;
-
-  // [핵심 추가] 내부에 있는 iframe을 찾아서 최신 심화 파일(adv_28)을 로드하도록 경로 지정
+  window._advOpen = true;
   var frame = document.querySelector('#advPanel iframe');
   if(frame) {
-    frame.src = "jeongsayeong_adv_28.html";
+    if(!frame.src || frame.src === "" || frame.src === "about:blank") {
+      frame.src = "jeongsayeong_adv_28.html";
+    }
   }
+  document.getElementById('advPanel').style.display = 'flex';
+}
 
-  document.getElementById('advPanel').style.display='flex';
-  document.getElementById('lp').style.display='none';
-  document.getElementById('hud').style.display='none';
-  document.getElementById('rp').style.display='none';
-  document.getElementById('p1content').style.display='none';
-  var p2=document.getElementById('p2content');if(p2)p2.style.display='none';
-  document.getElementById('ph3ov').style.display='none';
-  document.getElementById('lp3inner').style.display='none';
-}
 function closeAdvIframe(){
-  window._advOpen=false;
-  document.getElementById('advPanel').style.display='none';
-  document.getElementById('lp').style.display='flex';
-  document.getElementById('hud').style.display='block';
-  document.getElementById('rp').style.display='flex';
-  setMode(marsMode);
-  setPhase(1);
+  window._advOpen = false;
+  // 주소를 날리지 않아야 학생들이 이리저리 돌려본 3D 조작 결과가 그대로 보존됩니다!
+  document.getElementById('advPanel').style.display = 'none';
+
+  var t1 = document.getElementById('tab1');
+  var t3 = document.getElementById('tab3');
+  if(t1) t1.className = 'tab on';
+  if(t3) t3.className = 'tab';
 }
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'closeAdv') {
+    closeAdvIframe();
+  }
+});
 // iframe에서 닫기 메시지 수신
 window.addEventListener('message', function(e){
   if(e.data && e.data.type==='closeAdv') closeAdvIframe();
