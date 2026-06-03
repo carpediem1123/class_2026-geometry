@@ -516,29 +516,41 @@ plG.quaternion.copy(PQ);plG.visible=false;scene.add(plG);
 var grd=new THREE.GridHelper(20,20,0x5588cc,0x3366aa);grd.quaternion.copy(GQ);grd.visible=false;scene.add(grd);
 var mkSp=function(txt,col,fw,fh,fs){
   fs=fs||32;
-  // 먼저 임시 캔버스에서 실제 텍스트 너비 측정
+  // 충분히 큰 임시 캔버스에서 폰트 측정 (기본 캔버스는 폰트 설정 전에 크기 지정 필수)
   var tmpC=document.createElement('canvas');
+  tmpC.width=512;tmpC.height=256;
   var tmpCtx=tmpC.getContext('2d');
-  tmpCtx.font='bold '+fs+'px monospace';
-  var measured=tmpCtx.measureText(txt).width;
-  // 측정값 기준으로 여유 있는 캔버스 크기 계산
-  var cw=Math.ceil(measured)+fs*2;   // 좌우 fs 크기만큼 여백
-  var ch=Math.ceil(fs*1.4)+fs;       // 상하 여백
+  tmpCtx.font='bold '+fs+'px Arial,sans-serif';
+  var m=tmpCtx.measureText(txt);
+  // 실제 렌더 폭: actualBoundingBox 우선, 없으면 width 사용
+  var textW=m.width;
+  if(m.actualBoundingBoxLeft!==undefined&&m.actualBoundingBoxRight!==undefined){
+    textW=Math.max(textW, m.actualBoundingBoxLeft+m.actualBoundingBoxRight);
+  }
+  // 여백: 글자 크기의 2배 (좌우 각 1배) + 상하 각 1배 → 절대 잘리지 않음
+  var padX=fs*1.2, padY=fs*1.0;
+  var cw=Math.ceil(textW+padX*2);
+  var ch=Math.ceil(fs*1.6+padY*2);
+  // 2의 거듭제곱 올림 제거 → 그대로 사용 (잘림 방지)
   var c=document.createElement('canvas');
   c.width=cw; c.height=ch;
   var ctx=c.getContext('2d');
-  ctx.font='bold '+fs+'px monospace';
+  ctx.clearRect(0,0,cw,ch);
+  ctx.font='bold '+fs+'px Arial,sans-serif';
   ctx.textAlign='center';
   ctx.textBaseline='middle';
   ctx.fillStyle=col;
   ctx.fillText(txt,cw/2,ch/2);
-  var sp=new THREE.Sprite(new THREE.SpriteMaterial({
+  var mat=new THREE.SpriteMaterial({
     map:new THREE.CanvasTexture(c),
     transparent:true,
-    depthTest:false
-  }));
-  // 스케일: 픽셀→3D 월드 단위 (기준 52px = 1 unit)
-  sp.scale.set(cw/52,ch/52,1);
+    depthTest:false,
+    sizeAttenuation:true
+  });
+  var sp=new THREE.Sprite(mat);
+  // 3D 표시 크기: fs/28 = 1단위 기준으로 스케일 (폰트 크기 비례)
+  var unit=fs/28;
+  sp.scale.set(unit*(cw/ch)*1.4, unit*1.4, 1);
   scene.add(sp);
   return sp;
 };
@@ -820,7 +832,7 @@ var MC={
      steps:[
       {l:'STEP 1',d:'PO⊥α 확인 → PO⊥l 자동 성립!\n(l은 α 위의 직선)',btn:'PO⊥l 확인!',auto:1},
       {l:'STEP 2',d:'H를 조정하여 OH⊥l 달성하세요.',btn:'OH⊥l 달성!',cond:'oh'},
-      {l:'STEP 3',d:'레일을 설치하세요.(OH 케이블 고정)',btn:'🔧 레일 설치!',auto:1,installOH:1},
+      {l:'STEP 3',d:'레일을 설치하세요.\n(OH 케이블 고정)',btn:'🔧 레일 설치!',auto:1,installOH:1},
       {l:'STEP 4',d:'BETA',btn:'β⊥l 확인!',auto:1,beta:1,revHud:3},
       {l:'STEP 5',d:'PH ∈ β 이므로 ∴ PH⊥l 자동 성립!\n삼수선의 정리 ① ✓',btn:'🎉 정리① 발견!',auto:1,revPH:1},
 { l: 'STEP 6', d: '통신 회선 연결 완료.\n데이터 송신을 시작합니다.', btn: '📡 통신 송출 시작!', auto: 1, commStart: 1, final: 1 }, 
