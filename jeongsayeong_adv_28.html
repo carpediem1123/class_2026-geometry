@@ -65,6 +65,12 @@ html,body{width:100%;height:100%;overflow:hidden;
 .adv-ans-box{text-align:center;padding:10px;background:#0a1020;border-radius:7px;
   margin-top:5px;border:1.5px solid #ffdd44}
 
+/* ── 3D 꼭짓점 레이블 오버레이 ── */
+#lbl-overlay{position:absolute;inset:0;pointer-events:none;z-index:5;}
+.v-lbl{position:absolute;font-family:'Courier New',monospace;font-weight:bold;
+  transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;
+  text-shadow:0 0 6px rgba(0,0,0,0.95),0 0 3px rgba(0,0,0,0.95);}
+
 /* ── 분수 수식 표현 ── */
 .frac{display:inline-flex;flex-direction:column;align-items:center;
   vertical-align:middle;margin:0 2px;font-size:.9em;line-height:1.1}
@@ -86,6 +92,7 @@ html,body{width:100%;height:100%;overflow:hidden;
   <div id="cw">
     <canvas id="c3"></canvas>
     <div id="ld">초기화 중...</div>
+    <div id="lbl-overlay"></div>
     <!-- 좌측 문제 패널 -->
     <div id="qp">
       <!-- 기본개념 -->
@@ -358,7 +365,13 @@ function clearAdv(){
     window._hintLights={};
   }
   if(window._shadowFloor){ scene.remove(window._shadowFloor); window._shadowFloor=null; }
-  advObjs.forEach(function(o){scene.remove(o);if(o.geometry)o.geometry.dispose();if(o.material&&!Array.isArray(o.material))o.material.dispose();});
+  advObjs.forEach(function(o){
+    if(o._isDivLbl){ /* div 레이블은 clearLblOverlay에서 처리 */ return; }
+    scene.remove(o);
+    if(o.geometry)o.geometry.dispose();
+    if(o.material&&!Array.isArray(o.material))o.material.dispose();
+  });
+  clearLblOverlay();
   advObjs=[]; iPoints=[];
   // 메인 씬 오브젝트 숨기기 (존재할 때만)
   var _hide=function(o){if(o&&o.visible!==undefined)o.visible=false;};
@@ -764,17 +777,68 @@ window.adv1Step3=function(){
 // E=(0,0,0),F=(1,0,0),G=(1,1,0),H=(0,1,0)
 // 정사영: A→E, F→F, C→G → △EFG
 // ═══════════════════════════════════════
-function mkLbl3(txt,col,w,fs){
-  var fw=w||90, fz=fs||26;
-  var c=document.createElement('canvas');c.width=fw;c.height=fz+16;
-  var ctx=c.getContext('2d');
-  ctx.font='bold '+fz+'px Courier New';
-  // 텍스트 너비 측정해서 캔버스 자동 확장
-  var tw=ctx.measureText(txt).width;
-  if(tw+8>fw){c.width=tw+10;ctx.font='bold '+fz+'px Courier New';}
-  ctx.fillStyle=col;ctx.fillText(txt,4,fz+2);
-  var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false,fog:false}));
-  sp.scale.set(c.width/28,(fz+16)/20,1);return sp;
+// ── HTML 레이블 오버레이 시스템 ──
+var _lblOverlay = null;
+var _lblDefs = []; // {el, pos3d, col, fs}
+
+function initLblOverlay(){
+  _lblOverlay = document.getElementById('lbl-overlay');
+}
+
+function mkLbl3(txt, col, w, fs){
+  var fz = fs || 26;
+  // DOM div 생성
+  var el = document.createElement('div');
+  el.className = 'v-lbl';
+  el.textContent = txt;
+  el.style.fontSize = fz + 'px';
+  el.style.color = col;
+  el.style.display = 'none';
+  // 오버레이에 붙이기 (startRender 후 initLblOverlay 호출 보장)
+  if(!_lblOverlay) _lblOverlay = document.getElementById('lbl-overlay');
+  if(_lblOverlay) _lblOverlay.appendChild(el);
+  // Sprite 역할의 더미 객체 반환 (scene.add, advObjs 호환)
+  var dummy = {
+    _isDivLbl: true,
+    _el: el,
+    _pos: new THREE.Vector3(),
+    position: {
+      set: function(x,y,z){ dummy._pos.set(x,y,z); }
+    },
+    visible: true
+  };
+  _lblDefs.push(dummy);
+  return dummy;
+}
+
+// scene.add / advObjs.push 호환: dummy는 Three.js 객체가 아니므로 별도 처리
+var _origSceneAdd = null; // 원본 scene.add는 건드리지 않음
+
+function updateLblOverlay(){
+  if(!_lblOverlay) return;
+  var cw = document.getElementById('cw');
+  var W = cw.clientWidth, H = cw.clientHeight;
+  var panelW = 260; // 좌측 패널 너비
+  for(var i=0;i<_lblDefs.length;i++){
+    var d = _lblDefs[i];
+    var el = d._el;
+    if(!d.visible){ el.style.display='none'; continue; }
+    var v = d._pos.clone();
+    v.project(cam);
+    if(v.z > 1){ el.style.display='none'; continue; }
+    // 캔버스 좌표 (패널 왼쪽 260px 제외)
+    var sx = (v.x * 0.5 + 0.5) * W;
+    var sy = (v.y * -0.5 + 0.5) * H;
+    el.style.display = 'block';
+    el.style.left = sx + 'px';
+    el.style.top  = sy + 'px';
+  }
+}
+
+function clearLblOverlay(){
+  _lblDefs = [];
+  if(!_lblOverlay) _lblOverlay = document.getElementById('lbl-overlay');
+  if(_lblOverlay) _lblOverlay.innerHTML = '';
 }
 function mkDot(pos,col,r,noShadow){
   var m=new THREE.Mesh(new THREE.SphereGeometry(r||0.10,12,12),
@@ -861,7 +925,7 @@ function buildCubeScene(){
     var l=mkLbl3(k, col, 52, fs);
     var o=off[k];
     l.position.set(V[k].x+o[0], V[k].y+o[1], V[k].z+o[2]);
-    scene.add(l); advObjs.push(l);
+    advObjs.push(l);
   });
 
   // 범례 (화면 왼쪽 상단 고정 스프라이트)
@@ -1023,7 +1087,7 @@ function buildTetraScene(){
     var col=cols3[k];var cHex='#'+col.toString(16).padStart(6,'0');
     var l=mkLbl3(k,cHex,55,22);var o=offs3[k];
     l.position.set(pts3[k].x+o[0],pts3[k].y+o[1],pts3[k].z+o[2]);
-    scene.add(l);advObjs.push(l);
+    advObjs.push(l);
   });
   // M′ 및 수선 (숨김)
   var mpDot=mkDot(Mpv,0xff5588,.22,true);mpDot.visible=false;
@@ -1032,7 +1096,7 @@ function buildTetraScene(){
   var mpLine=mkLine([Mpv,Bv,Cv,Mpv],0xff5588);mpLine.visible=false;
   var mpLbl=mkLbl3("M'",'#ff88cc',55,20);
   mpLbl.position.set(Mpv.x+0.3,Mpv.y+0.35,Mpv.z);mpLbl.visible=false;
-  scene.add(mpLbl);advObjs.push(mpLbl);
+  advObjs.push(mpLbl);
   // DG 선 (무게중심 표시)
   var dgLine=mkLine([Dv,Gv],0x44ff88,true);dgLine.visible=false;
   var dgMid=mkDot(new THREE.Vector3((Dv.x+Gv.x)/2,0,(Dv.z+Gv.z)/2),0xff5588,.18,true);dgMid.visible=false;
@@ -1378,7 +1442,7 @@ function buildBoxScene(){
     var l=mkLbl3(k,col,52,fs);
     var o=off2[k];
     l.position.set(V2[k].x+o[0], V2[k].y+o[1], V2[k].z+o[2]);
-    scene.add(l); advObjs.push(l);
+    advObjs.push(l);
   });
 
     // 범례
@@ -1648,6 +1712,7 @@ canvas.addEventListener('wheel', function(e){
 // ── 렌더 루프 ──
 function startRender(){
   onRes();
+  initLblOverlay();
   document.getElementById('ld').style.display='none';
   switchAdvTab(0);
   
@@ -1662,53 +1727,11 @@ function startRender(){
       cam.lookAt(0,1,0);
     }
     
-    // 1. Three.js 3D 장면을 정상적으로 렌더링 (화면 먹통 완벽 해결)
+    // 1. Three.js 3D 장면 렌더링
     rdr.render(scene,cam);
     
-// 2. [최종 버그 해결] 심화2(정육면체) 모드일 때 꼭짓점 2D 글자 레이블을 캔버스 위에 강제 동기화 인쇄
-    if(advTab === 2 && typeof CTX !== 'undefined') {
-      
-      // 심화 2 모듈의 실제 정육면체 꼭짓점 절대 3D 좌표축 정의 (중심 2,2,2 기준 한 변 길이 4)
-      var cubePoints = [
-        {txt: 'A', x: 0, y: 4, z: 4}, {txt: 'B', x: 4, y: 4, z: 4},
-        {txt: 'C', x: 4, y: 0, z: 4}, {txt: 'D', x: 0, y: 0, z: 4},
-        {txt: 'E', x: 0, y: 4, z: 0}, {txt: 'F', x: 4, y: 4, z: 0},
-        {txt: 'G', x: 4, y: 0, z: 0}, {txt: 'H', x: 0, y: 0, z: 0}
-      ];
-
-      // Three.js의 3D 공간 좌표를 2D 모니터 화면 좌표로 변환하기 위한 객체 생성
-      var width = rdr.domElement.clientWidth;
-      var height = rdr.domElement.clientHeight;
-
-      cubePoints.forEach(function(lbl) {
-        // 3D 위치 벡터 설정
-        var vector = new THREE.Vector3(lbl.x, lbl.y, lbl.z);
-        
-        // 현재 카메라 시점 매트릭스를 기준으로 3D 좌표를 2D 투영 스크린 좌표로 변환 (-1에서 1 사이 값)
-        vector.project(cam);
-        
-        // 화면 해상도 픽셀 단위(X, Y) 좌표로 정밀 환산
-        var screenX = (vector.x * .5 + .5) * width;
-        var screenY = (vector.y * -.5 + .5) * height;
-
-        // 카메라 화면 뒤쪽에 있는 점은 렌더링에서 제외 (뒤집힘 방지 안전장치)
-        if (vector.z <= 1) {
-          CTX.save();
-          CTX.font = "bold 13px 'Share Tech Mono', sans-serif";
-          CTX.fillStyle = "#ffffff";       // 눈에 잘 띄는 하얀색
-          CTX.textAlign = "center";
-          CTX.textBaseline = "middle";
-          
-          // 글자가 배경 선이나 어두운 우주 테마에 묻히지 않도록 검은색 테두리 그림자 추가
-          CTX.shadowColor = "rgba(0, 0, 0, 1)";
-          CTX.shadowBlur = 4;
-          
-          // 꼭짓점 구체보다 14픽셀 위쪽(Y축 -14)에 글자 배치
-          CTX.fillText(lbl.txt, screenX, screenY - 14);
-          CTX.restore();
-        }
-      });
-    }
+    // 2. HTML 오버레이 레이블 위치 업데이트
+    updateLblOverlay();
     
   })();
 }
